@@ -61,33 +61,44 @@ competition
 <div class="bg-gray-200 min-h-screen">
   <div class="p-6 m-auto lg:flex">
     <div class="border lg:w-2/3">
-      <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.name }}">
-
+      <!-- Main image section with scroll buttons -->
+      <div class="relative">
+        <button id="mainScrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3 z-10">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        
+        <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.name }}" id="mainImage">
+    
+        <button id="mainScrollRight" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3 z-10">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    
       <div class="relative w-full overflow-hidden">
-        <!-- Container for images with horizontal scrolling -->
         <div class="flex transition-transform duration-300 ease-in-out" id="carousel">
-            {% for image in images %}
-            <div class="w-1/4 flex-shrink-0 p-2"> <!-- Adjust width to 1/4 to display 4 images -->
-                <img class="w-full h-30 object-cover border" src="{{ image.image.url }}" alt="{{ competition.name }}">
-            </div>
-            {% endfor %}
+          {% for image in images %}
+          <div class="w-1/4 flex-shrink-0 p-2">
+            <img class="w-full h-30 object-cover border thumbnail" src="{{ image.image.url }}" alt="{{ competition.name }}">
+          </div>
+          {% endfor %}
         </div>
     
-        <!-- Left Arrow (to scroll left) -->
-    <button id="scrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3">
-      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-  </button>
-
-  <!-- Right Arrow (to scroll right) -->
-  <button id="scrollRight" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3">
-      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-  </button>
-    </div>
-
+        <button id="scrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+    
+        <button id="scrollRight" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- This is the fixed sidebar for the competition details -->
@@ -127,8 +138,8 @@ competition
         {% if competitions %}
         {% for competition in competitions %}
         <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 rounded-lg border overflow-hidden hover:shadow-lg transition-transform transform hover:scale-105 duration-200 ease-in-out" id="card">
-            <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
-                <img src="{{ competition.image.url }}" alt="{{ competition.car_model }}" class="w-full rounded-t-lg">
+            <a href="{% url 'holicompetition' competition.id %}" class="block no-underline hover:no-underline">
+                <img src="{{ competition.image.url }}" alt="{{ competition.name }}" class="w-full rounded-t-lg">
                 <div class="p-4">
                     <div class="flex justify-between mb-2">
                         <div class="h-2 w-4/5 rounded-full bg-gray-200">
@@ -160,27 +171,98 @@ competition
 </div> <br>
 
 <script>
-  // Carousel scrolling functionality
   const carousel = document.getElementById('carousel');
   const scrollLeftButton = document.getElementById('scrollLeft');
   const scrollRightButton = document.getElementById('scrollRight');
+  const mainScrollLeftButton = document.getElementById('mainScrollLeft');
+  const mainScrollRightButton = document.getElementById('mainScrollRight');
+  const mainImage = document.getElementById('mainImage');
+  const thumbnailImages = document.querySelectorAll('.thumbnail');
   
-  let currentIndex = 0;
-    const imagesToShow = 4;  // Number of images to show at once
-    const totalImages = {{ images|length }};
-    
+  let currentIndex = 0; // Current index for the main image and carousel
+  const totalImages = thumbnailImages.length;
+  const autoScrollInterval = 3000; // Interval for automatic scrolling (in milliseconds)
+  let autoScrollTimer;
+
+  // Function to update the main image based on the clicked thumbnail
+  function updateMainImage(index) {
+      mainImage.src = thumbnailImages[index].src; // Update the main image source
+  }
+
+  // Function to scroll the thumbnails
+  function scrollThumbnails(direction) {
+      if (direction === 'right') {
+          currentIndex = (currentIndex + 1) % totalImages; // Increment and loop
+      } else if (direction === 'left') {
+          currentIndex = (currentIndex - 1 + totalImages) % totalImages; // Decrement and loop
+      }
+      
+      // Move the carousel
+      const translateX = -currentIndex * (100 / 4); // Adjust based on the number of visible images
+      carousel.style.transform = `translateX(${translateX}%)`;
+
+      // Update the main image
+      updateMainImage(currentIndex);
+  }
+
+  // Function to automatically scroll
+  function startAutoScroll() {
+      autoScrollTimer = setInterval(() => {
+          scrollThumbnails('right');
+      }, autoScrollInterval);
+  }
+
+  // Function to stop auto-scrolling
+  function stopAutoScroll() {
+      clearInterval(autoScrollTimer);
+  }
+
+  // Event listener for scrolling right
   scrollRightButton.addEventListener('click', () => {
-      if (currentIndex < totalImages - imagesToShow) {
-          currentIndex += imagesToShow; // Scroll to the next 4 images
-          carousel.style.transform = `translateX(-${currentIndex * 25}%)`; // 25% because each image is 1/4 width
-      }
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('right');
   });
-  
+
+  // Event listener for scrolling left
   scrollLeftButton.addEventListener('click', () => {
-      if (currentIndex > 0) {
-          currentIndex -= imagesToShow;
-          carousel.style.transform = `translateX(-${currentIndex * 25}%)`;
-      }
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('left');
+  });
+
+  // Event listener for main image scrolling right
+  mainScrollRightButton.addEventListener('click', () => {
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('right');
+  });
+
+  // Event listener for main image scrolling left
+  mainScrollLeftButton.addEventListener('click', () => {
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('left');
+  });
+
+  // Event listener for thumbnail click
+  thumbnailImages.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', () => {
+          stopAutoScroll(); // Stop auto-scrolling when user interacts
+          currentIndex = index; // Set current index to clicked thumbnail index
+          updateMainImage(currentIndex); // Update the main image
+          
+          // Scroll the thumbnails to show the clicked image
+          const translateX = -currentIndex * (100 / 4); // Adjust based on the number of visible images
+          carousel.style.transform = `translateX(${translateX}%)`;
+      });
+  });
+
+  // Start auto-scrolling when the page loads
+  window.onload = startAutoScroll;
+
+  // Optional: Restart auto-scroll after user interaction
+  const controls = [scrollLeftButton, scrollRightButton, mainScrollLeftButton, mainScrollRightButton];
+  controls.forEach(control => {
+      control.addEventListener('mouseenter', stopAutoScroll);
+      control.addEventListener('mouseleave', startAutoScroll);
   });
 </script>
+
 {% endblock %}

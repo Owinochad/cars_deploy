@@ -19,3 +19,24 @@ def check_image_properties(image_path):
 
 # Example usage
 check_image_properties('static/assets/img/land/rangeroverlodge.jpg')
+
+# students = {}
+# s=0
+# while s == 5:
+#     student  = input("Enter student names: ")
+#     student.append(students)
+#     s+= 1
+#     break
+
+# # n = 0
+# # while n==3:
+# #     paper = int(input("Enter marks of three subjects: "))
+# #     n += 1
+# #     break
+
+# # average = paper/3
+# # marks = average
+
+# print = (f'{students}')
+
+

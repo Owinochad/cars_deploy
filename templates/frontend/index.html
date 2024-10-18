@@ -13,10 +13,10 @@
             <div class="absolute top-0 left-0 right-0 bottom-0 bg-black/50 "></div>
           
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
-              <h1 class="text-2xl font-bold uppercase">win your Dream car</h1>
-              <p class="text-md mt-4">join and win a car now</p>
-              <button class="bg-black  text-white px-4 py-2 shadow-orange-500 shadow-2xl mt-4">
-                   <a href="{% url 'competitions' %}" class="block no-underline hover:no-underline animate-bounce font-bold">WIN NOW</a>               
+              <h1 class="text-5xl font-bold uppercase">Win Your Dream Car</h1>
+              <p class="text-4xl font-bold mt-4">TODAY</p>
+              <button class=" w-30 p-8 bg-red-1000 bg-opacity-30 px-4 py-2 shadow-orange-500 shadow-2xl mt-4">
+                   <a href="{% url 'competitions' %}" class="block no-underline hover:no-underline animate-bounce text-red-500 text-4xl font-bold">WIN NOW</a>               
               </button>
             </div>
       </div>
@@ -47,7 +47,8 @@
                 </div>
               
               <div class=" flex gap-0 sm:gap-4 transition-all duration-500 ease-in-out md:grid md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-4 transition-all duration-500">
-              <!-- car card -->  
+              <!-- car card -->
+
 
                   {% for competition in competitions %}
                   <div class=" rounded-lg border overflow-hidden  mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
@@ -80,6 +81,12 @@
                     </div>
                 </div>
                   {% endfor %}
+
+                  <div class=" col-span-2 w-full "> 
+                    <video autoplay muted loop class="object-cover w-full h-full ">
+                      <source src="{% static 'assets/videos/hero.mp4' %}" type="video/mp4">
+                    </video>
+                  </div>
   
   
               </div>
@@ -149,6 +156,12 @@
             </div>
           {% endfor %}
 
+          <div class=" col-span-2 w-full"> 
+            <video autoplay muted loop class="object-cover w-full h-full ">
+              <source src="{% static 'assets/videos/hero.mp4' %}" type="video/mp4">
+            </video>
+          </div>
+
           </div>
       </div>
       </div>
@@ -189,40 +202,45 @@
         ============================================================= -->
 
 
-        <div class="bg-black p-4  md:px-10 lg:px-20 text-gray-100">
-          <h2 class="text-center text-xl font-bold uppercase">how it works</h2>
-          <p class="text-center ">Win your dream car at a fraction of the cost</p>
-          <div class="flex overflow-x-auto mt-8 text-xs space-x-4">
-              <div class="flex-shrink-0 w-80 p-8 bg-gray-950 ">
-                  <svg class="size-10 bg-orange-500 p-1 rounded" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                    </svg>
-
-                    <h2 class="pt-2 pb-2 text-xl font-bold">Choose Your Prize</h2>
-                    <p class="leading-relaxed">Find a prize you’d love to win from our current competitions and select how many tickets you’d like from the dropdown. Make sure to try and answer the question correctly before you hit ‘enter now’ button!</p>
-                    
+        <div class="relative bg-black p-4 md:px-10 lg:px-20 text-gray-100 overflow-hidden h-screen flex items-center justify-center">
+          <!-- Video Background -->
+          <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover z-0">
+              <source src="https://videos.pexels.com/video-files/20076909/20076909-sd_640_360_25fps.mp4" type="video/mp4">
+          </video>
+      
+          <!-- Content on Top of the Video -->
+          <div class="relative z-5 text-center">
+              <h2 class="text-center text-xl font-bold uppercase text-black">How it works</h2>
+              <p class="text-center text-black font-bold">Win your dream car at a fraction of the cost</p>
+      
+              <!-- Flexbox for 3 items in the center -->
+              <div class="mt-8 flex justify-center space-x-8 text-xs">
+                  <div class="w-80 p-8 bg-gray-950 bg-opacity-80">
+                      <svg class="size-10 bg-orange-500 p-1 rounded mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                      </svg>
+                      <h2 class="pt-2 pb-2 text-xl font-bold">Choose Your Prize</h2>
+                      <p class="leading-relaxed">Find a prize you’d love to win from our current competitions and select how many tickets you’d like from the dropdown. Make sure to try and answer the question correctly before you hit ‘enter now’ button!</p>
+                  </div>
+      
+                  <div class="w-80 p-8 bg-gray-950 bg-opacity-80">
+                      <svg class="size-10 bg-orange-500 p-1 rounded mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                      </svg>
+                      <h2 class="pt-2 pb-2 text-xl font-bold">Choose Your Prize</h2>
+                      <p class="leading-relaxed">Find a prize you’d love to win from our current competitions and select how many tickets you’d like from the dropdown. Make sure to try and answer the question correctly before you hit ‘enter now’ button!</p>
+                  </div>
+      
+                  <div class="w-80 p-8 bg-gray-950 bg-opacity-80">
+                      <svg class="size-10 bg-orange-500 p-1 rounded mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                      </svg>
+                      <h2 class="pt-2 pb-2 text-xl font-bold">Choose Your Prize</h2>
+                      <p class="leading-relaxed">Find a prize you’d love to win from our current competitions and select how many tickets you’d like from the dropdown. Make sure to try and answer the question correctly before you hit ‘enter now’ button!</p>
+                  </div>
               </div>
-              <div class="flex-shrink-0 w-80 p-8 bg-gray-950 ">
-                  <svg class="size-10 bg-orange-500 p-1 rounded" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                    </svg>
-
-                    <h2 class="pt-2 pb-2 text-xl font-bold">Choose Your Prize</h2>
-                    <p class="leading-relaxed">Find a prize you’d love to win from our current competitions and select how many tickets you’d like from the dropdown. Make sure to try and answer the question correctly before you hit ‘enter now’ button!</p>
-                    
-              </div>
-              <div class="flex-shrink-0 w-80 p-8 bg-gray-950 ">
-                  <svg class="size-10 bg-orange-500 p-1 rounded" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                    </svg>
-
-                    <h2 class="pt-2 pb-2 text-xl font-bold">Choose Your Prize</h2>
-                    <p class="leading-relaxed">Find a prize you’d love to win from our current competitions and select how many tickets you’d like from the dropdown. Make sure to try and answer the question correctly before you hit ‘enter now’ button!</p>
-                    
-              </div>
-
           </div>
-        </div>
-        <!-- <script src="{% static 'assets/js/carousel.js' %}"></script>  -->
+      </div>
+      <!-- <script src="{% static 'assets/js/carousel.js' %}"></script>  -->
 
 {% endblock %}

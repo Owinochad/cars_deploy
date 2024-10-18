@@ -120,7 +120,7 @@
                             <div id="mpesa-info" class="mt-4 hidden">
                                 <p class="text-gray-700">You will receive an STK push on your phone once you press "Place Order".</p>
                             </div>
-                        </div>
+                        </div><br>
 
                         <!-- Paypal Accordion -->
                         <div class="border border-gray-300 rounded-lg p-4">
@@ -140,7 +140,7 @@
                     </div>
                 </div><br>
                 <div id="paypal-button-container"></div><br>
-                {{ paypal_form.render }}
+        
                 <div class="bg-white p-4 lg:hidden text-gray-700 sticky inset-y-0">
                     <div class="p-4 "> 
                         <div class=" flex justify-between text-sm border-b border-gray-500">
@@ -237,6 +237,7 @@
     visaMasterRadio.addEventListener('click', () => {
         visaMasterForm.classList.remove('hidden');
         mpesaInfo.classList.add('hidden');
+        paypalForm.classList.add('hidden');
         DPOForm.classList.add('hidden');
         setFormAction('visa')
     });
@@ -244,6 +245,7 @@
     mpesaRadio.addEventListener('click', () => {
         mpesaInfo.classList.remove('hidden');
         visaMasterForm.classList.add('hidden');
+        paypalForm.classList.add('hidden');
         DPOForm.classList.add('hidden');
         setFormAction('mpesa')
     });
@@ -251,6 +253,7 @@
     DPOradio.addEventListener('click', () => {
         mpesaInfo.classList.add('hidden');
         visaMasterForm.classList.add('hidden');
+        paypalForm.classList.add('hidden');
         DPOForm.classList.remove('hidden');
         setFormAction('dpo')
     });
@@ -259,6 +262,7 @@
         mpesaInfo.classList.add('hidden');
         visaMasterForm.classList.add('hidden');
         DPOForm.classList.add('hidden');
+        paypalForm.classList.remove('hidden');
         setFormAction('paypal')
     });
 

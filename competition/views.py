@@ -377,7 +377,7 @@ def deleteholidayImage(request, pk):
 
 def index(request):
     competitions = Competition.objects.all().order_by('-start_date')[:4]
-    holicompetition = HolidayCompetition.objects.all().order_by('-start_date')[:7]
+    holicompetition = HolidayCompetition.objects.all().order_by('-start_date')[:4]
     context = {
         'competitions': competitions,
         'holicompetition': holicompetition,
@@ -635,7 +635,7 @@ def view_basket(request):
         for item in basket:
             if 'competition_id' in item:
                 # Fetch competition item
-                competitions = Competition.objects.all()[:3]
+                competitions = Competition.objects.all()[:2]
                 competition = get_object_or_404(Competition, id=item['competition_id'])
                 total_cost += competition.ticket_price * item['ticket_count']
                 basket_items.append({
@@ -646,7 +646,7 @@ def view_basket(request):
                 })
             elif 'holicompetition_id' in item:
                 # Fetch holiday competition item
-                holicompetitions = HolidayCompetition.objects.all()[:3]
+                holicompetitions = HolidayCompetition.objects.all()[:1]
                 holicompetition = get_object_or_404(HolidayCompetition, id=item['holicompetition_id'])
                 total_cost += holicompetition.ticket_price * item['ticket_count']
                 basket_items.append({

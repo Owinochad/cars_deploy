@@ -9,122 +9,148 @@
     {% load custom_filters %}
     {% load static %}
     <style>
-        body {
-            background: url("{% static 'assets/img/bmw3.jpg' %}") no-repeat center fixed;
-            background-size: cover;
-        }
+        .carousel-container {
+    overflow: hidden;
+}
+
+.carousel-slides {
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    flex-shrink: 0;
+    width: 100%;
+}
     </style>
+
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full">
-        <div class="flex flex-col md:flex-row">
-            <div class="md:w-3/4 p-6">
-                <h4 class="text-2xl font-bold mb-4">Shopping Cart</h4>
-                <p class="text-gray-600">Items: {{ basket_items|length }}</p>
-
-                {% if basket_items %}
-                {% for item in basket_items %}
-                <div class="flex border-b py-4">
-                    <div class="w-1/4">
-                        {% if item.competition %}
-                            <img class="w-12" src="{{ item.competition.image.url }}" alt="{{ item.competition.car_model }}">
-                        {% elif item.holicompetition %}
-                            <img class="w-12" src="{{ item.holicompetition.image.url }}" alt="{{ item.holicompetition.name }}">
-                        {% endif %}
-                    </div>
-                    <div class="flex-1 px-4">
-                        <div class="text-gray-800">
-                            {% if item.competition %}
-                                {{ item.competition.car_model }}
-                            {% elif item.holicompetition %}
-                                {{ item.holicompetition.name }}
-                            {% endif %}
+    <div class="relative h-screen w-full overflow-hidden">
+        <div class="carousel-container absolute inset-0 w-screen h-full">
+            <div class="carousel-slides w-screen h-full flex transition-transform duration-500 ease-in-out">
+                <div class="carousel-slide w-full h-full bg-cover bg-center bg-blue-500">
+                    <img src="https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg" alt="Slide 1" class=" h-full  w-screen object-cover">
+                </div>
+                <div class="carousel-slide w-full h-full bg-cover bg-center bg-green-500">
+                    <img src="https://images.pexels.com/photos/70912/pexels-photo-70912.jpeg" alt="Slide 2" class=" h-full w-screen object-cover">
+                </div>
+                <div class="carousel-slide w-full h-full bg-cover bg-center bg-green-500">
+                    <img src="https://images.pexels.com/photos/70912/pexels-photo-70912.jpeg" alt="Slide 3" class=" h-full w-screen object-cover">
+                </div>
+                <div class="carousel-slide w-full h-full bg-cover bg-center bg-green-500">
+                    <img src="https://images.pexels.com/photos/70912/pexels-photo-70912.jpeg" alt="Slide 4" class=" h-full w-screen object-cover">
+                </div>
+            </div>
+        </div>
+        <div class=" absolute inset-0 flex justify-center items-center bg-black/50">
+            <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-3/4 p-6 max-h-48 overflow-y-auto scrollbar-hidden">
+                        <h4 class="text-2xl font-bold mb-4">Shopping Cart</h4>
+                        <p class="text-gray-600">Items: {{ basket_items|length }}</p>
+        
+                        {% if basket_items %}
+                        {% for item in basket_items %}
+                        <div class="flex border-b py-4">
+                            <div class="w-1/4">
+                                {% if item.competition %}
+                                    <img class="w-12" src="{{ item.competition.image.url }}" alt="{{ item.competition.car_model }}">
+                                {% elif item.holicompetition %}
+                                    <img class="w-12" src="{{ item.holicompetition.image.url }}" alt="{{ item.holicompetition.name }}">
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 px-4">
+                                <div class="text-gray-800">
+                                    {% if item.competition %}
+                                        {{ item.competition.car_model }}
+                                    {% elif item.holicompetition %}
+                                        {{ item.holicompetition.name }}
+                                    {% endif %}
+                                </div>
+                            
+                            </div>
+                            <div class="w-1/4 text-center">
+                                <span class="border p-2" id="ticket-count-{{ item.id }}">{{ item.ticket_count }}</span>
+                                <button class="plus-btn" data-competition-id="{% if item.competition %}{{ item.competition.id }}{% else %}{{ item.holicompetition.id }}{% endif %}">+</button>
+                            </div>
+                            <div class="w-1/4 text-right">
+                                {% if item.competition %}
+                                    KES <span class="cost" data-competition-id="{{ item.id }}" data-ticket-price="{{ item.competition.ticket_price }}">
+                                        {{ item.competition.ticket_price|multiply:item.ticket_count|floatformat:2 }}
+                                    </span>
+                                {% elif item.holicompetition %}
+                                    KES <span class="cost" data-competition-id="{{ item.id }}" data-ticket-price="{{ item.holicompetition.ticket_price }}">
+                                        {{ item.holicompetition.ticket_price|multiply:item.ticket_count|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+                                <a href="{% url 'remove_from_basket' item.id %}" class="text-black-500 ml-2">&#10005;</a>
+                            </div>
                         </div>
-                        <div class="text-gray-600">
-                            {% if item.competition %}
-                                {{ item.competition.car_model }}
-                            {% elif item.holicompetition %}
-                                {{ item.holicompetition.name }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="w-1/4 text-center">
-                        <span class="border p-2" id="ticket-count-{{ item.id }}">{{ item.ticket_count }}</span>
-                        <button class="plus-btn" data-competition-id="{% if item.competition %}{{ item.competition.id }}{% else %}{{ item.holicompetition.id }}{% endif %}">+</button>
-                    </div>
-                    <div class="w-1/4 text-right">
-                        {% if item.competition %}
-                            KES <span class="cost" data-competition-id="{{ item.id }}" data-ticket-price="{{ item.competition.ticket_price }}">
-                                {{ item.competition.ticket_price|multiply:item.ticket_count|floatformat:2 }}
-                            </span>
-                        {% elif item.holicompetition %}
-                            KES <span class="cost" data-competition-id="{{ item.id }}" data-ticket-price="{{ item.holicompetition.ticket_price }}">
-                                {{ item.holicompetition.ticket_price|multiply:item.ticket_count|floatformat:2 }}
-                            </span>
+                        {% endfor %}
+                        {% else %}
+                            <p class="text-center">No items yet, keep on Playing.</p>
                         {% endif %}
-                        <a href="{% url 'remove_from_basket' item.id %}" class="text-black-500 ml-2">&#10005;</a>
+                        
+                    </div> <br>
+                    <div class="md:w-1/4 bg-gray-200 p-6 rounded-br-lg rounded-tr-lg">
+                        <h5 class="text-xl font-bold mb-4">Summary</h5>
+                        <div class="flex justify-between mb-2">
+                            <span>ITEMS:</span>
+                            <span>{{ basket_items|length }}</span>
+                        </div>
+                        <div class="flex justify-between border-t pt-2">
+                            <span class="font-bold">TOTAL PRICE:</span>
+                            <span class="text-orange-500 font-bold">KES <span id="total-cost">{{ total_cost|floatformat:2 }}</span></span>
+                        </div>
+                        <div class="mt-6">
+                            <a href="{% url 'check_out' %}" class="block text-center text-orange bg-red-500 hover:bg-red-600 font-bold py-2 rounded animate-bounce">CHECKOUT</a>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
-                {% else %}
-                    <p class="text-center">No items yet, keep on Playing.</p>
-                {% endif %}
-                <div class="mt-6">
+                <div class=" font-bold p-2 mt-6">
                     <a href="{% url 'competitions' %}" class="text-red-500 hover:underline">&leftarrow; Back to the game</a>
                 </div>
-            </div>
-            <div class="md:w-1/4 bg-gray-200 p-6 rounded-br-lg rounded-tr-lg">
-                <h5 class="text-xl font-bold mb-4">Summary</h5>
-                <div class="flex justify-between mb-2">
-                    <span>ITEMS:</span>
-                    <span>{{ basket_items|length }}</span>
-                </div>
-                <div class="flex justify-between border-t pt-2">
-                    <span class="font-bold">TOTAL PRICE:</span>
-                    <span class="text-orange-500 font-bold">KES <span id="total-cost">{{ total_cost|floatformat:2 }}</span></span>
-                </div>
-                <div class="mt-6">
-                    <a href="{% url 'check_out' %}" class="block text-center text-orange bg-red-500 hover:bg-red-600 font-bold py-2 rounded animate-bounce">CHECKOUT</a>
-                </div>
-            </div>
-        </div>
-        <div class="pt-4 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-500">
-            <div class="text-left">
-                <h1 class="font-bold text-gray-900 mb-4">Other People Play These Competitions Below. <span class="font-bold ">Win Now!</span> </h1>
-            </div>
-            <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500" id="carousel">
-                {% if competitions %}
-                {% for competition in competitions %}
-                <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0" id="card">
-                    <a href="{% url 'competition' competition.id %}"></a>
-                    <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
-                    </a>
-                    <div class="p-2">
-                        <div class="flex justify-between">
-                            <div class=" h-2 w-4/5 rounded-full bg-gray-200 mt-2">
-                                <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 "></div>
+                <div class="pt-4 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-500">
+                    <div class="text-left">
+                        <h1 class="font-bold text-gray-900 mb-4">Other People Play These Competitions Below. <span class="font-bold text-red-500 ">Win Now!</span> </h1>
+                    </div>
+                    <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500" id="carousel">
+                        {% if competitions %}
+                        {% for competition in competitions %}
+                        <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0" id="card">
+                            <a href="{% url 'competition' competition.id %}"></a>
+                            <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
+                            </a>
+                            <div class="p-2">
+                                <div class="flex justify-between">
+                                    <div class=" h-2 w-4/5 rounded-full bg-gray-200 mt-2">
+                                        <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 "></div>
+                                    </div>
+                                    <p class="text-gray-800 text-xs">50% sold</p>
+                                </div>
+                                <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_brand }} Tax free</p>
+                                <div class="flex items-center text-xs p-1 bg-orange-200 w-max">
+                                    <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    <p class="text-orange-600">1 day</p>                  
+                                </div>
+                                <div class="flex justify-between items-center mt-2 text-orange-500">
+                                    <p class="text-xl">ksh  {{ competition.ticket_price }}</p>
+                                    <svg class="size-10 fill-orange-500 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>                  
+                                </div>
                             </div>
-                            <p class="text-gray-800 text-xs">50% sold</p>
                         </div>
-                        <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_brand }} Tax free</p>
-                        <div class="flex items-center text-xs p-1 bg-orange-200 w-max">
-                            <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                            <p class="text-orange-600">1 day</p>                  
-                        </div>
-                        <div class="flex justify-between items-center mt-2 text-orange-500">
-                            <p class="text-xl">ksh  {{ competition.ticket_price }}</p>
-                            <svg class="size-10 fill-orange-500 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>                  
-                        </div>
+                        {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
-                {% endif %}
-            </div>
         </div>
+
+    </div>
+   
     </div>
 
     <script>
@@ -215,6 +241,22 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+    </script>
+    <script>
+        const carouselSlides = document.querySelector('.carousel-slides');
+        const slideWidth = carouselSlides.offsetWidth;
+        let currentSlide = 0;
+
+        function showSlide() {
+            carouselSlides.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        }
+
+        // Automatically slide to the next image every 3 seconds (adjust as needed)
+        setInterval(function() {
+            currentSlide = (currentSlide + 1) % carouselSlides.children.length;
+            showSlide();
+        }, 3000);
 
     </script>
 </body>
