@@ -5,14 +5,26 @@ from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 
-def process_image(image, target_size=(1024, 768), quality=85):
+def process_image(image, max_width=1024, max_height=768, quality=85):
     # Open the uploaded image
     img = Image.open(image)
 
-    # Check the current size of the image
-    if img.size != target_size:
-        # Resize the image to the target size
-        img = img.resize(target_size, Image.LANCZOS)
+    # Get the original size
+    original_width, original_height = img.size
+
+    # Calculate the aspect ratio
+    aspect_ratio = original_width / original_height
+
+    # Set target dimensions while preserving the aspect ratio
+    if aspect_ratio > 1:  # Landscape
+        target_width = min(max_width, original_width)
+        target_height = int(target_width / aspect_ratio)
+    else:  # Portrait or square
+        target_height = min(max_height, original_height)
+        target_width = int(target_height * aspect_ratio)
+
+    # Resize the image to the target size
+    img = img.resize((target_width, target_height), Image.LANCZOS)
 
     # Create a new filename with .jpeg extension
     base_filename, _ = os.path.splitext(image.name)
@@ -32,14 +44,27 @@ def process_image(image, target_size=(1024, 768), quality=85):
         None
     )
 
-def processimage(image, target_size=(1280, 853), quality=85):
+
+def processimage(image, max_width=1024, max_height=768, quality=85):
     # Open the uploaded image
     img = Image.open(image)
 
-    # Check the current size of the image
-    if img.size != target_size:
-        # Resize the image to the target size
-        img = img.resize(target_size, Image.LANCZOS)
+    # Get the original size
+    original_width, original_height = img.size
+
+    # Calculate the aspect ratio
+    aspect_ratio = original_width / original_height
+
+    # Set target dimensions while preserving the aspect ratio
+    if aspect_ratio > 1:  # Landscape
+        target_width = min(max_width, original_width)
+        target_height = int(target_width / aspect_ratio)
+    else:  # Portrait or square
+        target_height = min(max_height, original_height)
+        target_width = int(target_height * aspect_ratio)
+
+    # Resize the image to the target size
+    img = img.resize((target_width, target_height), Image.LANCZOS)
 
     # Create a new filename with .jpeg extension
     base_filename, _ = os.path.splitext(image.name)

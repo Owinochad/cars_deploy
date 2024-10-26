@@ -107,14 +107,30 @@
             </a>
 
             <!-- Logo Image -->
-            <img src="{% static 'assets/img/logo.jpeg' %}" alt="MyDreamCar Logo" class="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
+            <img src="{% static 'assets/img/my2.png' %}" alt="MyDreamCar Logo" class="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
             
         </h2>
 
         <!-- Menu toggle for mobile -->
-        <div class="block lg:hidden">
-            <button id="menuToggle" class="text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+        <div class="block flex gap-2 item-center lg:hidden">
+            {% if user.is_authenticated %}
+            <a href="{% url 'user-profile' %}" class="text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
+                <img class="size-6 rounded-full bg-slate-900 object-center" src="{{ user.userprofile.image.url }}" alt="Profile Image">                 
+            </a>
+            {% else %}
+            <a href="{% url 'account_login' %}" class="text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  </svg>                  
+            </a>
+            {% endif %}
+            <a href="{% url 'view_basket' %}"  class="text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                  </svg>
+            </a>
+             <button id="menuToggle" class="text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5" />
                 </svg>
             </button>
@@ -130,7 +146,25 @@
             {% endif %}
             
 
-            <a href="{% url 'competitions' %}" class="inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline">Competitions</a>
+            <div class="relative inline-block text-left">
+                <!-- Button to trigger the dropdown -->
+                <button class="inline-flex items-center hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline focus:outline-none font-bold uppercase" id="dropdownMenuButton">
+                    Competitions
+                    <!-- Dropdown icon -->
+                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            
+                <!-- Dropdown menu -->
+                <div class="hidden absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:underline focus:outline-none" id="dropdownMenu">
+                    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="dropdownMenuButton">
+                        <a href="{% url 'competitions' %}" class="block px-4 py-2 text-sm text-orange-700 hover:bg-orange-100" role="menuitem">Car Competitions</a>
+                        <a href="{% url 'holicompetitions' %}" class="block px-4 py-2 text-sm text-orange-700 hover:bg-orange-100" role="menuitem">Holiday Competitions</a>
+                    </div>
+                </div>
+            </div>
+
             <a href="#" class="inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline">Winners</a>
 
             {% if request.user.is_authenticated %}
@@ -214,57 +248,65 @@
         <div class="container m-auto p-10 lg:flex justify-between gap-8 ">
             <div class="lg:w-2/5">
                 <h2 class="text-2xl text-gray-200 font-bold mb-6">WEEKLY COMPETITION WINNERS - GUARANTEED</h2>
-                <p class="pb-2 text-md text-gray-100 leading-relaxed">MDCA (Best Of The Best on MydreamcarAfrica) operates skilled prize competitions resulting in the allocation of prizes in accordance with the Terms and Conditions of the website</p>
-                <p class="pb-2 text-md text-gray-100 leading-relaxed">Win a brand new car, take the cash alternative, or win Competition Credit in the BOTB Dream Car Competition. There are over 150 new car prizes to choose from, and the person with the random ticket number wins the car!
-                </p>
-                <p class="pb-2 text-md text-gray-100 leading-relaxed">To win a car, enter our Lifestyle or Instant Win Competitions. Simply choose your tickets and check out!</p>
+                <p class="pb-2 text-md text-gray-100 leading-relaxed">MDCA (Best Of The Best on MydreamcarAfrica) operates skilled prize competitions resulting in the allocation of prizes in accordance with the Terms and Conditions of the website & the laws of Kenya.</p>
+                <p class="pb-2 text-md text-gray-100 leading-relaxed">Win a brand new car, win holidays prizes, or win both the holiday, your dream car and more for buying just a ticket in MyDreamCarAfrica Competitions. There are over 150 new car and holiday prizes to choose from, and a winner will be choosen randomly in our live draws to win their dream car, holiday and more prizes.                </p>
+                <p class="pb-2 text-md text-gray-100 leading-relaxed">To win a car, holidays and more prizes login to our site & choose our competitions. Simply buy your tickets and check out to win!</p>
                 <h2 class="text-2xl text-gray-100 font-bold mb-6">Be the next big winner!</h2>
-                {% if request.user.is_authenticated%}
+                <a href="{% url 'competitions' %}" class="py-3 px-8 text-white bg-orange-500 rounded-lg font-bold uppercase">WIN NOW!</a>
+
+
+                <!-- {% if request.user.is_authenticated%}
                 <a href="{% url 'account_logout' %}" class="py-3 px-8 text-white bg-orange-500 rounded-lg font-bold uppercase">Logout!</a>
                 {% else %}
                 <a href="{% url 'account_login' %}" class="py-3 px-8 text-white bg-orange-500 rounded-lg font-bold uppercase">Signin</a>
                 {% endif %}
-            
+             -->
             </div>
             <div class="mt-4 lg:flex-grow lg:flex justify-between">
                 <div>
                     <h2 class="text-gray-200 text-sm font-bold ">competition</h2>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Instant Win</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">dream Car</a></div>
-                <div>
+                    <a href="{% url 'competitions' %}" class="text-sm text-gray-100 block hover:underline">Instant Win</a>
+                    <a href="{% url 'competitions' %}" class="text-sm text-gray-100 block hover:underline">dream Car</a></div>
+                <!-- <div>
                     <h2 class="text-gray-200 text-sm font-bold ">Winners</h2>
                     <a href="#" class="text-sm text-gray-100 block hover:underline">Previous Winner</a>
                     <a href="#" class="text-sm text-gray-100 block hover:underline">Winner in the Press</a>
                     <a href="#" class="text-sm text-gray-100 block hover:underline">Prize Collection</a>
-                </div>
+                </div> -->
                 <div>
                     <h2 class="text-gray-200 text-sm font-bold ">About MydreamcarAfrica</h2>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Testimonials</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">History</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">How To Play</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Blog</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Contact Us</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Site Map</a>
+                    <a href="{% url 'how_it_works' %}" class="text-sm text-gray-100 block hover:underline">How to play</a>
                 </div>
                 <div>
                     <h2 class="text-gray-200 text-sm font-bold ">Under The Hood</h2>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Terms of Play</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Privacy Policy</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Cookie Policy</a>
-                </div>
-
-                <div>
-                    <h2 class="text-gray-200 text-sm font-bold ">More from MDCA</h2>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Refer a friend</a>
-                    <!-- <a href="#" class="text-sm text-gray-100 block hover:underline">Privacy Policy</a>
-                    <a href="#" class="text-sm text-gray-100 block hover:underline">Cookie Policy</a> -->
+                    <a href="{% url 'terms_and_conditions' %}" class="text-sm text-gray-100 block hover:underline">Terms of Play</a>
+                    <a href="{% url 'privacy_policy' %}" class="text-sm text-gray-100 block hover:underline">Privacy Policy</a>
+                    <a href="{% url 'cookie_policy' %}" class="text-sm text-gray-100 block hover:underline">Cookie Policy</a>
                 </div>
 
             </div>
         </div>
     </div>
     <script src="{% static 'assets/js/script.js' %}"></script>
-    <script src="{% static 'assets/js/carousel.js' %}"></script>
+    <!-- <script src="{% static 'assets/js/carousel.js' %}"></script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownButton = document.getElementById('dropdownMenuButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+    
+            // Toggle dropdown on button click
+            dropdownButton.addEventListener('click', function () {
+                dropdownMenu.classList.toggle('hidden');
+            });
+    
+            // Close dropdown when clicking outside of it
+            document.addEventListener('click', function (event) {
+                if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

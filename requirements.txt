@@ -9,6 +9,7 @@ defusedxml==0.8.0rc2
 dj-database-url==2.2.0
 Django==4.2.16
 django-allauth==65.0.1
+django-cors-headers==4.4.0
 django-crispy-forms==2.3
 django-multiupload==0.6.1
 django-paypal==2.1

@@ -8,7 +8,7 @@ Pop up
 ======================= -->
 <div id="pop-up" class="bg-black/50 transform transition-all opacity-100 scale-100 p-4 sm:p-8 md:p-20 min-h-screen z-10 fixed hidden inset-0 flex justify-center items-center">
   <div class="bg-white w-11/12 sm:w-4/5 md:w-2/3 lg:w-2/5 p-4 sm:p-6 md:p-10 rounded-lg shadow-xl">
-    <form method="POST" action="{% url 'add_to_baskety' competition.id %}">
+    <form method="POST" action="{% url 'add_to_baskety' holiday_competition.id %}">
       {% csrf_token %}
       <div class="grid grid-cols-3 pb-4 font-bold text-gray-600 tracking-wide">
         <p></p>
@@ -17,11 +17,11 @@ Pop up
       </div>
 
       <div class="flex items-center mb-4">
-        <img class="w-2/5 rounded aspect-video" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
+        <img class="w-2/5 rounded aspect-video" src="{{ holiday_competition.image.url }}" alt="{{ holiday_competition.name }}">
         <div class="ml-6">
-          <h2 class="text-sm sm:text-base md:text-lg font-bold">{{ competition.name }}</h2>
-          <p class="text-sm sm:text-base md:text-lg">1 ticket = Ksh <span id="ticket-price">{{ competition.ticket_price }}</span></p>
-          <p class="text-sm sm:text-base md:text-lg font-bold"> Ksh <span id="total-price">{{ competition.ticket_price }}</span></p>
+          <h2 class="text-sm sm:text-base md:text-lg font-bold"> A trip to {{ holiday_competition.name }}</h2>
+          <p class="text-sm sm:text-base md:text-lg">1 ticket = Ksh <span id="ticket-price">{{ holiday_competition.ticket_price }}</span></p>
+          <p class="text-sm sm:text-base md:text-lg font-bold"> Ksh <span id="total-price">{{ holiday_competition.ticket_price }}</span></p>
         </div>
       </div>
 
@@ -31,7 +31,6 @@ Pop up
           <button type="button" class="bg-white-200 text-xs sm:text-sm md:text-base px-2 py-1 rounded" id="decrement">-</button>
           <input class="w-12 sm:w-14 text-xs sm:text-sm md:text-base text-center" value="2" type="number" name="ticket_count" id="quantity" min="1">
           <button type="button" class="bg-white-200 text-xs sm:text-sm md:text-base px-2 py-1 rounded" id="increment">+</button>
-          <p class="text-xs sm:text-sm md:text-base">Max 75 tickets per person</p>
         </div>
       </div>
 
@@ -69,7 +68,7 @@ competition
           </svg>
         </button>
         
-        <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.name }}" id="mainImage">
+        <img class="w-full" src="{{ holiday_competition.image.url }}" alt="{{ holiday_competition.name }}" id="mainImage">
     
         <button id="mainScrollRight" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3 z-10">
           <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -103,14 +102,14 @@ competition
 
     <!-- This is the fixed sidebar for the competition details -->
 <div class="bg-white flex-grow h-auto p-4 sticky top-20 transition delay-500 ml-4 w-80"> <!-- Adjusted width -->
-  <h1 class="mb-2 text-sm text-gray-500 font-bold">Win A {{ competition.name }}</h1>
+  <h1 class="mb-2 text-sm text-gray-500 font-bold">Win a trip to {{ holiday_competition.name }}</h1>
   <p class="text-lg mb-2 text-gray-700">
-    At only <span class="font-bold text-orange-500">ksh {{ competition.ticket_price }}</span> cash
+    At only <span class="font-bold text-orange-500">ksh {{ holiday_competition.ticket_price }}</span> cash
   </p>
   <p class="font-bold text-lg text-gray-800">More Tickets Higher chances of winning >>></p>
 
   <div class="flex flex-col mt-4">
-    <img class="w-full h-auto mb-4 max-w-xs" src="{{ competition.image.url }}" alt="{{ competition.car_model }}"> <!-- Adjusted image size -->
+    <img class="w-full h-auto mb-4 max-w-xs" src="{{ holiday_competition.image.url }}" alt="{{ holiday_competition.name }}"> <!-- Adjusted image size -->
 
     <h2 class="font-bold text-lg text-gray-800">Description</h2>
     <div class="max-h-80 overflow-y-auto"> <!-- Scrollable specifications container -->
@@ -135,24 +134,24 @@ competition
     <!-- Grid layout for competitions -->
     <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500" id="carousel">
         <!-- Example card for competitions -->
-        {% if competitions %}
-        {% for competition in competitions %}
+        {% if holiday_competitions %}
+        {% for competition in holiday_competitions %}
         <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 rounded-lg border overflow-hidden hover:shadow-lg transition-transform transform hover:scale-105 duration-200 ease-in-out" id="card">
             <a href="{% url 'holicompetition' competition.id %}" class="block no-underline hover:no-underline">
                 <img src="{{ competition.image.url }}" alt="{{ competition.name }}" class="w-full rounded-t-lg">
                 <div class="p-4">
                     <div class="flex justify-between mb-2">
                         <div class="h-2 w-4/5 rounded-full bg-gray-200">
-                            <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                            <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
                         </div>
-                        <p class="text-gray-800 text-xs">50% sold</p>
+                        <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
                     </div>
                     <p class="py-2 text-gray-700 font-bold">Win this {{ competition.name }} holiday NOW!</p>
                     <div class="flex items-center text-xs p-2 bg-orange-200 w-max rounded-md">
                         <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        <p class="text-orange-600 ml-1">1 day</p>
+                        <p class="text-orange-600 ml-1">{{competition.days_rem}} days</p>
                     </div>
                 </div>
             </a>
@@ -264,5 +263,6 @@ competition
       control.addEventListener('mouseleave', startAutoScroll);
   });
 </script>
+<script src="{% static 'assets\js\payPopUp.js' %}"></script>
 
 {% endblock %}

@@ -6,4 +6,5 @@ urlpatterns = [
     path('profile/update/', views.profile_update, name='user-profile-update'),
     path('deposit/', views.deposit, name='deposit'),
     path('deposit_stk/', views.deposit_stk, name='deposit_stk'),    
+    path('ticket_view/<int:competition_id>/', views.ticket_view, name='ticket_view'),    
 ]

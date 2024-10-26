@@ -17,9 +17,9 @@ Pop up
       </div>
 
       <div class="flex items-center mb-4">
-        <img class="w-2/5 rounded aspect-video" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
+        <img class="w-2/5 rounded" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
         <div class="ml-6">
-          <h2 class="text-sm sm:text-base md:text-lg font-bold">{{ competition.car_brand }}</h2>
+          <h2 class="text-sm sm:text-base md:text-lg font-bold">{{ competition.car_make }}</h2>
           <p class="my-1 text-xs sm:text-sm md:text-base text-gray-400 font-bold">{{ competition.car_model }}</p>
           <p class="text-sm sm:text-base md:text-lg">1 ticket = Ksh <span id="ticket-price">{{ competition.ticket_price }}</span></p>
           <p class="text-sm sm:text-base md:text-lg font-bold"> Ksh <span id="total-price">{{ competition.ticket_price }}</span></p>
@@ -32,7 +32,6 @@ Pop up
           <button type="button" class="bg-white-500 text-xs sm:text-sm md:text-base px-2 py-2 rounded" id="decrement"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAACZUlEQVRYR92YUXLaMBCGd01MX9MbmMENzRs5QegN6A3StxZnpnCChhOEF+hjyAmSG6Q9QfNGoTDxDeLHTgLerhLawUKyZRsTpprJS0bSfvr312oNwo4N3DEe+D+ARqduA0JolBCOCWCfVXaWSvt8RB8JfCC8PBj8uk2bAWOF7trO/u+HUtNC/MxB6oaBgpCocziYDQ3nm6VMKGIRnKcAkePfQkjd2tfZdRJYokI/PbfNk77wRiI1uUZI0D0cTM/iNokFmnjVCwI8yUUhLeaA3w7603e6PbVAS2VEmjY++CJ03vanPdXGSqDxp2oTLLzYRJq0pwnpvcpTa0DiNj087t3kMLCpokGtP30tT14DKjJVcnAuCR/kkrAGNPaqdwDomB4z57w1lSJAk9abOiH9yBkk1XIkPFqt6BGgUcs9s/Cp5mxtMECPy0Dnb8AI0PjUvQKC5tZoOJBcl6JAnivSpXynxMIFwfcssMtHuKFZG/GRBKQ3tEnZ18EmWCEOyL3XFcMCgYDr0T9hdiBl5Nf6s4rS1BPPveF3RpfrLPZJXBNragY6Z6B24i4bnBB77UcfHccq7XGl3uKQHtkXfzrK9rxS6fmB0kPin6NW9YT7ZtF6FD5UN1fdD23lgSW/bC+OVtURCiiBlk296IkKG7quUdvCFnnj5Ju1euoXaPJpaNuLjpwqranlHG2yJRHK2Pa8q4PRekiGem76xYciOhlNZfwFm/ihuAqQod8O2LzdV/Z8GKeKsYd0agjFQsT6c59DrNqTclzciP8wEO+T+LHBLj/6piDGHsqYoszLUqUsc5QUC3cO6A9rq/Ul5bCzHwAAAABJRU5ErkJggg=="/></button>
           <input class="w-12 sm:w-14 text-xs sm:text-sm md:text-base text-center" value="2" type="number" name="ticket_count" id="quantity" min="1">
           <button type="button" class="bg-white-500 text-xs sm:text-sm md:text-base px-2 py-1 rounded" id="increment"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAChUlEQVRYR91YXXLaMBDWiuYV1BvAFPJMTlB6A3qD9AQN7wHskHdyg9ATtDeAniB560wgE9+gSl470XbFkI7/ZK/slDLVjF/s1erTt9+uVgZxYAMODI/4PwCtz9VASDMAhPcAQqEQbcs07S5CEBEIjJ5BfjkO9K1vBNgMPQRK/XoWwwbgZwLQZy6kDcLoeKYXTHteyCwjUuLcA0hifdr1LRoIu5f6WxmwUobWY3UGgFNypMqclX1HgWHv4ikosisEtJk2rwXCadlCXt9RrLqzxw+uOU5AO2bmXosxjZF01ZvpqzzzXECbczUUEq9fI0xOjAY+5mkqA8hmkzG4ZAuYQoCA37dpT2WA0mTAJEp3Lx7fpm0zgHxDFRfqetIMQIBNANagkvApXRIygDaT1gN5a7M8klEdQDQ9w1IC0F2g+tLgDReMtasJSBgJJ/GKngDkS/lrAKIad/UufBq9kJAAtJm2vtKWh/tkiNZL1KUEoPtJ68aZXbFsSgA2ctW71Cv77uXQzWROcfYldJRkqEDQnLLvYrZECoWAfrqK4V8EJKge/SHmEEIWEaBOvqjHraVHpd36qJv2xaKeNud08J3tM8sK0/5HoNpHBm2lZo/aDKUO2X9+dDQkdDqB1rkasi/vxupUwrb1YI06DOVlbn4/5HPAVm8/ImLnJM6OZSAXkK24IHHJoqiikatrdLaw9xUyjostnVnxeftv8gEXDZCjdKicok7vskpL4mLKMiNBhi4wTg2lHe6afnsDaXPDkrJj32BLL4pxx779Ns3VJN7wTUMsilhha8jFhmUMpenvbhmWNfvY4qZph5quHyv7s+GIfj5wgbA1VDFElad5hazyKh4TDw7Qb+0KZzTs46DTAAAAAElFTkSuQmCC"/></button>
-          <p class="text-xs sm:text-sm md:text-base">Max 75 tickets per person</p>
         </div>
       </div>
 
@@ -60,8 +59,8 @@ competition
 ===================
 -->
 <div class="bg-gray-200 min-h-screen">
-  <div class="p-6 m-auto lg:flex">
-    <div class="border lg:w-2/3">
+  <div class="p-6 m-auto md:flex gap-2">
+    <div class="border md:w-4/5">
       <!-- Main image section with scroll buttons -->
       <div class="relative">
         <button id="mainScrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3 z-10">
@@ -83,7 +82,7 @@ competition
         <div class="flex transition-transform duration-300 ease-in-out" id="carousel">
           {% for image in images %}
           <div class="w-1/4 flex-shrink-0 p-2">
-            <img class="w-full h-30 object-cover border thumbnail" src="{{ image.image.url }}" alt="{{ competition.car_model }}">
+            <img class="w-full h-full object-cover border thumbnail" src="{{ image.image.url }}" alt="{{ competition.car_model }}">
           </div>
           {% endfor %}
         </div>
@@ -103,7 +102,7 @@ competition
     </div>
 
     <!-- This is the fixed sidebar for the competition details -->
-<div class="bg-white flex-grow h-auto p-4 sticky top-20 transition delay-500 ml-4 w-80"> <!-- Adjusted width -->
+<div class="bg-white p-4 sticky top-20 transition delay-500 ml-4 w-auto md:w-96 mx-auto"> <!-- Adjusted width -->
   <h1 class="mb-2 text-sm text-gray-500 font-bold">Win A {{ competition.car_model }}</h1>
   <p class="text-lg mb-2 text-gray-700">
     At only <span class="font-bold text-orange-500">ksh {{ competition.ticket_price }}</span> cash
@@ -111,7 +110,7 @@ competition
   <p class="font-bold text-lg text-gray-800">More Tickets Higher chances of winning >>></p>
 
   <div class="flex flex-col mt-4">
-    <img class="w-full h-auto mb-4 max-w-xs" src="{{ competition.image.url }}" alt="{{ competition.car_model }}"> <!-- Adjusted image size -->
+    <img class="w-full h-auto mb-4 md:w-80 " src="{{ competition.image.url }}" alt="{{ competition.car_model }}"> <!-- Adjusted image size -->
 
     <h2 class="font-bold text-lg text-gray-800">Specifications</h2>
     <div class="max-h-80 overflow-y-auto"> <!-- Scrollable specifications container -->
@@ -138,22 +137,22 @@ competition
         <!-- Example card for competitions -->
         {% if competitions %}
         {% for competition in competitions %}
-        <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 rounded-lg border overflow-hidden hover:shadow-lg transition-transform transform hover:scale-105 duration-200 ease-in-out" id="card">
+        <div class="mt-4 bg-white w-full md:w-96 lg:w-auto  flex-shrink-0 rounded-lg border overflow-hidden hover:shadow-lg transition-transform transform hover:scale-105 duration-200 ease-in-out" id="card">
             <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
                 <img src="{{ competition.image.url }}" alt="{{ competition.car_model }}" class="w-full rounded-t-lg">
                 <div class="p-4">
                     <div class="flex justify-between mb-2">
                         <div class="h-2 w-4/5 rounded-full bg-gray-200">
-                            <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                            <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
                         </div>
-                        <p class="text-gray-800 text-xs">50% sold</p>
+                        <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
                     </div>
-                    <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_brand }} Tax free</p>
+                    <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_make }} Tax free</p>
                     <div class="flex items-center text-xs p-2 bg-orange-200 w-max rounded-md">
                         <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        <p class="text-orange-600 ml-1">1 day</p>
+                        <p class="text-orange-600 ml-1">{{competition.days_rem}} days</p>
                     </div>
                 </div>
             </a>
@@ -265,5 +264,7 @@ competition
       control.addEventListener('mouseleave', startAutoScroll);
   });
 </script>
+
+<script src="{% static 'assets\js\payPopUp.js' %}"></script>
 
 {% endblock %}

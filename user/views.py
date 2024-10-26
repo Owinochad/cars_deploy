@@ -17,37 +17,106 @@ import logging
 from decimal import Decimal
 from django.utils import timezone
 
+
+def ticket_view(request, competition_id):
+    user = request.user
+
+    # Check if the competition is a regular or a holiday competition
+    try:
+        competition = Competition.objects.get(id=competition_id)
+        tickets = Ticket.objects.filter(user=user, competition=competition)
+        competition_type = 'competition'
+    except Competition.DoesNotExist:
+        try:
+            holiday = HolidayCompetition.objects.get(id=competition_id)
+            tickets = Ticket.objects.filter(user=user, holiday=holiday)
+            competition_type = 'holiday'
+        except HolidayCompetition.DoesNotExist:
+            # Handle the case where neither competition exists
+            return redirect('some-error-view')  # Redirect or show an error
+
+    context = {
+        'competition': competition if competition_type == 'competition' else holiday,
+        'tickets': tickets,
+        'competition_type': competition_type,
+    }
+
+    return render(request, 'user/ticketview.html', context)
+
+# @login_required
+# def profile(request):
+#     user = request.user
+
+#     # Fetch a subset of regular competitions and holiday competitions
+#     competition = Competition.objects.all()[:2]  # Adjust filter as needed
+#     holiday_competition = HolidayCompetition.objects.first()
+
+#     # Query all tickets associated with this user, including both regular and holiday competitions
+#     tickets = Ticket.objects.filter(user=user).select_related('competition', 'holiday')
+
+#     # Group tickets by both competition and holiday competition
+#     competitions = {}
+#     holidays = {}
+    
+#     for ticket in tickets:
+#         if ticket.competition:
+#             if ticket.competition not in competitions:
+#                 competitions[ticket.competition] = []
+#             competitions[ticket.competition].append(ticket.number)
+#         elif ticket.holiday:
+#             if ticket.holiday not in competitions:
+#                 holidays[ticket.holiday] = []
+#             holidays[ticket.holiday].append(ticket.number)
+
+#     return render(request, 'user/profile.html', {
+#         'user': user,
+#         'competitions': competitions,
+#         'competition': competition,
+#         'holiday': holiday_competition,
+#         'holidays':holidays,
+#     })
+
 @login_required
 def profile(request):
-    img1 = Competition.objects.get(id=4)
-    img2 = Competition.objects.get(id=3)
-    img3 = HolidayCompetition.objects.get(id=7)
     user = request.user
-    # Query all tickets associated with this user
-    tickets = Ticket.objects.filter(user=user).select_related('competition')
+
+    # Fetch competitions
+    competitions = Competition.objects.all()[:2]  # Car competitions
+    holiday_competition = HolidayCompetition.objects.first()
+
+    # Query all tickets associated with this user, including both regular and holiday competitions
+    tickets = Ticket.objects.filter(user=user).select_related('competition', 'holiday')
+
+    # Group tickets by both competition and holiday competition
+    competitions_dict = {}
+    holidays_dict = {}
     
-    # Group tickets by competition
-    competitions = {}
     for ticket in tickets:
-        if ticket.competition not in competitions:
-            competitions[ticket.competition] = []
-        competitions[ticket.competition].append(ticket.number)
-    
+        if ticket.competition:
+            if ticket.competition not in competitions_dict:
+                competitions_dict[ticket.competition] = []
+            competitions_dict[ticket.competition].append(ticket.number)
+        elif ticket.holiday:
+            if ticket.holiday not in holidays_dict:
+                holidays_dict[ticket.holiday] = []
+            holidays_dict[ticket.holiday].append(ticket.number)
+
     return render(request, 'user/profile.html', {
         'user': user,
-        'competitions': competitions,
-        'img1': img1,
-        'img2': img2,
-        'img3': img3,
+        'competitions': competitions_dict,
+        'competition': competitions,
+        'holiday': holiday_competition,
+        'holidays': holidays_dict,
     })
+
 
 
 @login_required
 def profile_update(request):
 
-    img1 = Competition.objects.get(id=4)
-    img2 = Competition.objects.get(id=3)
-    img3 = HolidayCompetition.objects.get(id=7)
+    competition = Competition.objects.all()[:2]  # Adjust filter as needed
+    holiday_competition = HolidayCompetition.objects.first()
+    
 
     if not hasattr(request.user, 'userprofile'):
         UserProfile.objects.create(user=request.user)
@@ -68,9 +137,8 @@ def profile_update(request):
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
-        'img1': img1,
-        'img2': img2,
-        'img3': img3,
+        'competition': competition,
+        'holiday_competition': holiday_competition,
     }
     return render(request, 'user/profile_update.html', context)
 

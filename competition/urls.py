@@ -34,6 +34,15 @@ urlpatterns = [
     path('payment_success/', views.payment_success, name='payment_success'),
     path('payment_failed/', views.payment_failure, name='payment_failure'),
     path('remove_from_basket/<int:item_id>/', views.remove_from_basket, name='remove_from_basket'),
-    path('create_payment/', views.create_payment, name='create_payment'),
-    path('execute_payment/', views. execute_payment, name='execute_payment'),
+    # path('create_payment/', views.create_payment, name='create_payment'),
+    # path('execute_payment/', views. execute_payment, name='execute_payment'),
+    path('terms_and_conditions/', views.terms_and_conditions, name='terms_and_conditions'),
+    path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
+    path('cookie_policy/', views.cookie_policy, name='cookie_policy'),
+    path('how_it_works/', views.how_it_works, name='how_it_works'),
+    path('ticket/', views.create_ticket, name='ticket'),
+    path('delete-images-holiday/<int:competition_id>/', views.delete_images_holi, name='delete_images_holiday'),
+    path('delete-images-competition/<int:competition_id>/', views.delete_images_compe, name='delete_images_competition'),
+
+
       ]

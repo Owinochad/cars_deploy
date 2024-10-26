@@ -12,13 +12,13 @@
             {% for competition in competitions %}
                 <div class="rounded-lg border overflow-hidden mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
                     <a href="{% url 'holicompetition' competition.id %}" class="block no-underline hover:no-underline">
-                        <img class="w-full rounded-t-lg" src="{{ competition.image.url }}" alt="{{ competition.name }}">
+                        <img class="object-cover h-96 w-full rounded-t-lg" src="{{ competition.image.url }}" alt="{{ competition.name }}">
                         <div class="p-4">
                             <div class="flex justify-between mb-2">
                                 <div class="h-2 w-4/5 rounded-full bg-gray-200">
-                                    <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                                    <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
                                 </div>
-                                <p class="text-gray-800 text-xs">50% sold</p>
+                                <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
                             </div>
                             <p class="py-2 text-gray-700 font-bold">Win this {{ competition.name }} holiday and experience comfort</p>
                             <div class="flex items-center text-xs p-2 bg-orange-200 w-max rounded-md">
@@ -42,4 +42,6 @@
         {% endif %}
     </div>
 </div><br>
+
+
 {% endblock %}

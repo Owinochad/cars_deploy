@@ -4,31 +4,28 @@
 
 {% block content %}
 
-<div class=""></div>
 <div class="  p-4 bg-[url('{% static 'assets/img/sign-in-out/background.jpg' %}')] relative">
-    <div class=" flex gap-4 mx-auto w-max">
-        <a href="{% url 'competition' 4 %}">
+    <div class=" md:flex gap-4 mx-auto w-max">
 
-            <img class=" animate-bounce h-40 aspect-video mx-auto" src="{{ img1.image.url }}" alt="">
+        {% for compe in competition %}
 
-        </a>
+        <a class="p-2" href="{% url 'competition' compe.id %}">
 
-        <a href="{% url 'holicompetition' 7 %}">
-
-            <img class="  h-40 aspect-video mx-auto" src="{{ img3.image.url }}" alt="">
+            <img class=" lg:h-40 h-24  aspect-video mx-auto" src="{{ compe.image.url }}" alt="">
 
         </a>
 
-        <a href=" {% url 'competition' 3 %} ">
+        {% endfor %}
 
-            <img class=" animate-bounce h-40 aspect-video mx-auto" src="{{ img2.image.url }}" alt="">
-
-        </a>
+        {% if holiday_competition %}
+            <a class="p-2" href="{% url 'holicompetition' holiday_competition.id %}">
+                <img class="lg:h-40 h-24 aspect-video mx-auto" src="{{ holiday_competition.image.url }}" alt="">
+            </a>
+        {% endif %}
 
     </div>
+    </div>
     
-    <img class="absolute right-6 top-40 w-24 h-24 rounded-full border-6 border-white" src="{{ user.userprofile.image.url }}" alt="Profile Image">
-</div>
 
 <div class="md:flex md:justify-center md:px-10 lg:px-20 transition-all duration-500">
     <div class="md:w-1/2 p-4">

@@ -6,6 +6,7 @@
     <title>Checkout</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.stripe.com/v3/"></script> <!-- Stripe SDK -->
+    {% load static %}
 </head>
 <body>
   <form id="payment-form" method="post">
@@ -79,41 +80,13 @@
                 <h2 class="uppercase font-bold text-xl my-4">Payment Information</h2>
                 <div class="bg-white"> 
                     <div class="mt-2">
-                        <!-- DPO intergration -->
-                        <div class="border border-gray-300 rounded-lg p-4 mb-4">
-                            <label class="flex items-center">
-                                <input type="radio" value="dpo" name="payment" class="mr-3" id="DPO-radio">
-                                <div class="flex items-center">
-                                    <img src="https://dpogroup.com/wp-content/uploads/2020/07/dpo-group-834x675.png" alt="MasterCard" class="h-8">
-                                    <span class="ml-3 text-lg">Pay with DPO</span>
-                                </div>
-                            </label>
-                            <div id="DPO-form" class="mt-4 hidden">
-                                <p class="text-gray-700">You will be redirected to DPO to complete your payment.</p>
-                            </div>
-                        </div>
-                    <div class="mt-2">
-                        <!-- Visa/MasterCard Accordion -->
-                        <div class="border border-gray-300 rounded-lg p-4 mb-4">
-                            <label class="flex items-center">
-                                <input type="radio" value="visa" name="payment" class="mr-3" id="visa-master-radio">
-                                <div class="flex items-center">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="h-6 mr-2">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard" class="h-6">
-                                    <span class="ml-3 text-lg">Pay with Visa/MasterCard</span>
-                                </div>
-                            </label>
-                            <div id="visa-master-form" class="mt-4 hidden">
-                                <p class="text-gray-700">You will be redirected to paypal to complete your payment.{{ paypal_form.render }}</p>
-                            </div>
-                        </div>
-                      
-                        <!-- Mpesa Accordion -->
-                        <div class="border border-gray-300 rounded-lg p-4">
+
+                         <!-- Mpesa Accordion -->
+                         <div class="border border-gray-300 rounded-lg p-4">
                             <label class="flex items-center">
                                 <input type="radio" value="mpesa" name="payment" class="mr-3" id="mpesa-radio">
                                 <div class="flex items-center">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/512px-M-PESA_LOGO-01.svg.png?20191120100524" alt="Mpesa" class="h-6">
+                                    <img src="{% static 'assets/img/mpepe.png' %}" alt="Mpesa" class="h-14">
                                     <span class="ml-3 text-lg">Pay with Mpesa</span>
                                 </div>
                             </label>
@@ -122,72 +95,80 @@
                             </div>
                         </div><br>
 
-                        <!-- Paypal Accordion -->
-                        <div class="border border-gray-300 rounded-lg p-4">
+                        <!-- DPO intergration -->
+                        <div class="border border-gray-300 rounded-lg p-4 mb-4">
                             <label class="flex items-center">
-                                <input type="radio" value="paypal" name="payment" class="mr-3" id="paypal-radio">
+                                <input type="radio" value="dpo" name="payment" class="mr-3" id="DPO-radio">
                                 <div class="flex items-center">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/512px-M-PESA_LOGO-01.svg.png?20191120100524" alt="Mpesa" class="h-6">
-                                    <span class="ml-3 text-lg">Pay with Paypal</span>
+                                    <img src="{% static 'assets/img/dpo.png' %}" alt="MasterCard" class="h-14">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="h-6 mr-2">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard" class="h-6">
+                                    <span class="ml-3 text-lg">Pay with DPO</span>
                                 </div>
                             </label>
-                            <div id="paypal-info" class="mt-4 hidden">
-                                <p class="text-gray-700">You will receive an STK push on your phone once you press "Place Order".</p>
+                            <div id="DPO-form" class="mt-4 hidden">
+                                <p class="text-gray-700">You will be redirected to DPO to complete your payment.</p>
                             </div>
                         </div>
+                    
+                </div>
+                
+                <div class="hidden lg:block rounded ">
+                    <button type="submit" id="pay-button" class=" w-full block bg-gray-900 py-3 text-gray-100 text-center font-bold uppercase mt-4">
+                        Place Order
+                    </button>
+                </div>
 
-
-                    </div>
-                </div><br>
+                <br>
                 <div id="paypal-button-container"></div><br>
         
                 <div class="bg-white p-4 lg:hidden text-gray-700 sticky inset-y-0">
                     <div class="p-4 "> 
                         <div class=" flex justify-between text-sm border-b border-gray-500">
                             <h2>Subtotal</h2>
-                            <h2 class="pb-4">{{ amount}}</h2>
+                            <h2 class="pb-4">{{Amount}}</h2>
                         </div>
                     </div>
                     <div class="px-4 flex justify-between text-xl font-bold "> 
                         <h2>Subtotal</h2>
-                        <h2>{{amount}}</h2>
+                        <h2>{{Amount}}</h2>
                     </div>
-                    <div class="px-4 ">
+                    <!-- <div class="px-4 ">
                       <button class=" w-full block bg-gray-900 py-3 text-gray-100 text-center font-bold uppercase mt-4" type="submit" id="stripe-pay-btn" >
                         place order
                       </button>
-                    </div>
+                    </div> -->
        
                 </div>
                 <!-- Place Order button -->
-                <div class="hidden lg:block rounded ">
+                <!-- <div class="hidden lg:block rounded ">
                     <button type="submit" id="pay-button" class=" w-full block bg-gray-900 py-3 text-gray-100 text-center font-bold uppercase mt-4">
                         Place Order
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
                 <div class="bg-white hidden lg:block lg:flex-grow">
             <div class="p-8">
-                <h2 class="text-xl font-bold uppercase">Your Order</h2>
-                <p class="my-4">{{ basket_len }}</p>
+                <!-- <h2 class="text-xl font-bold uppercase">Your Order</h2>
+                <p class="my-4">{{ Amount }}</p>
                 <div class="flex space-x-8">
                     <img class="h-10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/512px-M-PESA_LOGO-01.svg.png?20191120100524" alt="">
                     <div class="text-gray-700">
                         <h2 class="font-bold">Win Your car</h2>
-                        <p class="text-xs ">{{amount}}</p>
+                        <p class="text-xs ">{{Amount}}</p>
                     </div>
                 </div>
                 <div class="p-4 "> 
                     <div class=" flex justify-between text-sm border-b border-gray-500">
                         <h2>Subtotal</h2>
-                        <h2 class="pb-4">{{amount}}</h2>
+                        <h2 class="pb-4">{{Amount}}</h2>
                     </div>
                 </div>
                 <div class="px-4 flex justify-between text-xl font-bold "> 
                     <h2>Subtotal</h2>
-                    <h2>{{amount}}</h2>
-                </div>
+                    <h2>{{Amount}}</h2>
+                </div> -->
             </div>
         </div>
         </div>
@@ -199,18 +180,18 @@
                     <img class="h-10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/512px-M-PESA_LOGO-01.svg.png?20191120100524" alt="">
                     <div class="text-gray-700">
                         <h2 class="font-bold">Win Your car</h2>
-                        <p class="text-xs ">{{amount}}</p>
+                        <p class="text-xs ">{{Amount}}</p>
                     </div>
                 </div>
                 <div class="p-4 "> 
                     <div class=" flex justify-between text-sm border-b border-gray-500">
                         <h2>Subtotal</h2>
-                        <h2 class="pb-4">{{amount}}</h2>
+                        <h2 class="pb-4">{{Amount}}</h2>
                     </div>
                 </div>
                 <div class="px-4 flex justify-between text-xl font-bold "> 
                     <h2>Subtotal</h2>
-                    <h2>{{total_amount}}</h2>
+                    <h2>{{Amount}}</h2>
                 </div>
             </div>
         </div>
@@ -222,49 +203,26 @@
     
     
   document.addEventListener('DOMContentLoaded', function () {
-    const visaMasterRadio = document.getElementById('visa-master-radio');
-    const paypalradio = document.getElementById('paypal-radio');
     const mpesaRadio = document.getElementById('mpesa-radio');
     const DPOradio = document.getElementById('DPO-radio');
     
-    const visaMasterForm = document.getElementById('visa-master-form');
     const mpesaInfo = document.getElementById('mpesa-info');
     const DPOForm = document.getElementById('DPO-form');
-    const paypalForm = document.getElementById('paypal-form');
     const payButton = document.getElementById('pay-button');
 
-    // Toggle between payment options (Mpesa/Stripe/DPO)
-    visaMasterRadio.addEventListener('click', () => {
-        visaMasterForm.classList.remove('hidden');
-        mpesaInfo.classList.add('hidden');
-        paypalForm.classList.add('hidden');
-        DPOForm.classList.add('hidden');
-        setFormAction('visa')
-    });
 
     mpesaRadio.addEventListener('click', () => {
         mpesaInfo.classList.remove('hidden');
-        visaMasterForm.classList.add('hidden');
-        paypalForm.classList.add('hidden');
         DPOForm.classList.add('hidden');
         setFormAction('mpesa')
     });
 
     DPOradio.addEventListener('click', () => {
         mpesaInfo.classList.add('hidden');
-        visaMasterForm.classList.add('hidden');
-        paypalForm.classList.add('hidden');
         DPOForm.classList.remove('hidden');
         setFormAction('dpo')
     });
 
-    paypalradio.addEventListener('click', () => {
-        mpesaInfo.classList.add('hidden');
-        visaMasterForm.classList.add('hidden');
-        DPOForm.classList.add('hidden');
-        paypalForm.classList.remove('hidden');
-        setFormAction('paypal')
-    });
 
 
 
@@ -282,8 +240,6 @@
             'dpo': '{% url "DPO" %}',
             
             'mpesa': '{% url "stk" %}',
-
-            'paypal': '{% url "create_payment" %}',
         };
 
         // Function to update the form action based on the selected payment method
@@ -295,20 +251,23 @@
 
 <script
 
-src="https://www.paypal.com/sdk/js?client-id=AZ6OBhGRlZl31r6PRZq6AU8Wzty30cg8x8BW93kEF7Jq0g-ITGAwN5x5tq4f0QQd21VQ9p3K95lb_ND-&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo,paylater,card"
+src="https://www.paypal.com/sdk/js?client-id=Ae3t_f7V7T1rPj186J28ye4F0KnabFrV6zFjTnKMTXpJxh5RqfOuAYCFfvh8NH6mLPkGQHjl-ImHR4CF&buyer-country=US&currency=USD&components=card"
 
 data-sdk-integration-source="developer-studio"
 
 ></script>
 
   <script>
+    const script = document.createElement('script');
+    script.src = "https://www.paypal.com/sdk/js?client-id=Ae3t_f7V7T1rPj186J28ye4F0KnabFrV6zFjTnKMTXpJxh5RqfOuAYCFfvh8NH6mLPkGQHjl-ImHR4CF";
+    script.onload = () => {
         window.paypal.Buttons({
             //set up the trasnaction when a payment button is clicked
             createOrder: function(data, actions) {
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '10',
+                            value: '{{Amount_usd}}', 
                         }
                     }]
                 });
@@ -318,9 +277,33 @@ data-sdk-integration-source="developer-studio"
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(orderData) {
                     //successfull capture!
-                    console.log('capture results', orderData, JSON.stringify(orderData, null, 2));
                     var transaction = orderData.purchase_units[0].payments.captures[0];
-                    alert('Transaction'+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                    // alert('Transaction'+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                    fetch("{% url 'ticket' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is passed in the request
+                        },
+                        body: JSON.stringify({
+                            id: data.orderID
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // If the request succeeds, redirect to success page
+                            window.location.href = "{% url 'payment_success' %}";
+                        } else {
+                            // If the request fails, redirect to failure page
+                            window.location.href = "{% url 'payment_failure' %}";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during POST:', error);
+                        // On fetch error, redirect to the failure page
+                        window.location.href = "{% url 'payment_failure' %}"
+                    });
 
                     // when ready to go live remove the alert and show a success message within this page.
                     // var element = document.getElementById('paypal-button-container');
@@ -331,6 +314,7 @@ data-sdk-integration-source="developer-studio"
                 });
             }
         }).render('#paypal-button-container');
+    };document.body.appendChild(script);
         
         
   </script>

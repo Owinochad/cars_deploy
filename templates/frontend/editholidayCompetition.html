@@ -9,21 +9,64 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen lg:flex gap-4 container mx-auto p-4">
+    
+    <div class="min-h-screen  lg:flex gap-4 container mx-auto p-4">
 
-        <!-- Navigation (same as previous) -->
-        <div class="hidden lg:block left h-[97vh] absolute sticky top-4 w-1/5 bg-white p-8 rounded-lg lg:flex flex-col justify-between">
-          <div>
-              <h2 class="text-lg font-bold">
-                <a href="{% url 'index' %}" class="text-xl lg:text-3xl font-bold tracking-wide hover:text-orange-500 transition-colors duration-300 ease-in-out">
-                    MyDreamHoliday
-                </a>
-              </h2>
-              <ul class="mt-8 text-gray-500">
-                  <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-                  <li class="pt-6"><a href="{% url 'listHolidayCompetitions' %}">Holidays</a></li>
-                  <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create Holiday</a></li>
+        <!-- nav small screens -->
+  
+        <div class="bg-white p-8 mb-4 shadow-lg lg:hidden">
+          <div class="flex justify-between items-center">
+            <h1 class="font-bold"><a href="{% url 'index' %}" class="text-xl lg:text-3xl font-bold tracking-wide hover:text-orange-500 transition-colors duration-300 ease-in-out">
+              MyDreamCar
+          </a></h1>
+            <svg id="hambugerIcon" class="size-6 sm:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg> 
+            <div class="hidden sm:block hidden">
+              <ul class="text-center text-gray-500 flex">
+              <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+              <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">HolidayCompetitions List</a></li>
+              <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
+              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
+              
               </ul>
+            </div>       
+          </div>
+  
+          <div id="menu" class="hidden">
+            <ul class="text-center text-gray-500">
+              <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+              <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
+              <li class="pt-6"><a href="{% url 'listHolidayCompetitions' %}">HolidayCompetitions List</a></li>
+              <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
+              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
+            </ul>
+          </div>
+  
+  
+        </div>
+        
+        <!-- menu on large screens -->
+  
+        <div class="hidden lg:block left h-[97vh] absolute sticky top-4  w-1/5 bg-white p-8 rounded-lg lg:flex flex-col justify-between">
+          <div>
+          <h2 class="text-lg font-bold">
+            <a href="{% url 'index' %}" class="text-xl lg:text-3xl font-bold tracking-wide hover:text-orange-500 transition-colors duration-300 ease-in-out">
+              MyDreamCar
+          </a>
+          </h2>
+          
+            <ul class="mt-8 text-gray-500">
+              <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+              <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions</a></li>
+              <li class="pt-6"><a href="{% url 'listHolidayCompetitions' %}">HolidayCompetitions List</a></li>
+              <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
+              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
+            </ul>
           </div>
           <div class="flex flex-col items-center text-gray-500">
               <img class="size-12 rounded-full object-cover" src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
@@ -58,14 +101,22 @@
                     </div>
 
                     <div class="md:flex gap-2 mt-4">
+                        
                         <div class="md:w-1/2 flex flex-col gap-1">
                             <label for="ticket_price">Ticket Price</label>
                             <input class="p-2 border rounded w-full" type="number" name="ticket_price" id="ticket_price" value="{{ form.ticket_price.value }}">
                         </div>
+                        
                         <div class="md:w-1/2 flex flex-col gap-1">
                             <label for="total_tickets">Total Tickets</label>
                             <input class="p-2 border rounded w-full" type="number" name="total_tickets" id="total_tickets" value="{{ form.total_tickets.value }}">
                         </div>
+
+                        <div class="md:w-1/2 flex flex-col gap-1">
+                            <label for="ticket_price">Tickets Sold</label>
+                            <input class="p-2 border rounded w-full" type="number" name="tickets_sold" id="tickets_sold" value="{{ form.tickets_sold.value }}">
+                        </div>
+
                     </div>
 
                     <div class="md:flex gap-2 mt-4">
@@ -79,38 +130,43 @@
                         </div>
                     </div>
 
+                    <div class="mt-4">
+                        <h3>Current Carousel Images</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {% for img in competition_images %}
+                                <div class="relative carousel-image-container" id="carousel-image-{{img.pk}}">
+                                    <div class="absolute bg-black/50 inset-0 hover:block">
+                                        <!-- Attach the delete event to this span -->
+                                        <span data-image-id="{{img.pk}}" class="delete-icon text-right text-xl px-2 text-white bg-black inline-block cursor-pointer">x</span>
+                                    </div>
+                                    <img src="{{ img.image.url }}" class="w-32 h-32 object-cover" alt="Carousel Image">
+                                </div>
+                            {% endfor %}
+                            
+                    </div>
+                    <!-- Delete All Images Button -->
+                    <button type="button" id="deleteAllImagesBtn" class="bg-red-500 px-3 py-2 text-white rounded-xl hover:bg-red-700 transition mt-4">
+                        Delete All Carousel Images
+                    </button>
+                    </div>
+
                     <div class="md:flex gap-2 mt-4">
-                        <div class="md:w-1/2 flex flex-col gap-1">
-                            <label for="max_entries_per_user">Max Entries per User</label>
-                            <input class="p-2 border rounded w-full" type="number" name="max_entries_per_user" id="max_entries_per_user" value="{{ form.max_entries_per_user.value }}">
-                        </div>
+    
                         <div class="md:w-1/2 flex flex-col gap-1">
                             <label for="image">Main Image</label>
                             <input class="p-2 border rounded w-full" type="file" name="image" id="image">
                         </div>
+                   
+                    <!-- Upload new carousel images -->
+                    <div class="md:w-1/2 flex flex-col gap-1">
+                        <h3>Upload New Carousel Images</h3>
+                        <div id="carousel" class="flex flex-col gap-2">
+                            <input class="p-2 border rounded w-full" type="file" name="images" accept="image/*" multiple>
+                        </div>
                     </div>
 
-                    <div class="mt-4">
-                    <h3>Current Carousel Images</h3>
-                    <div class="flex flex-wrap gap-2">
-                        {% for img in competition_images %}
-                            <div class="relative" id="carousel-image-{{img.pk}}">
-                                <div class="absolute bg-black/50 inset-0 hover:block">
-                                    <!-- Attach the delete event to this span -->
-                                    <span data-image-id="{{img.pk}}" class="delete-icon text-right text-xl px-2 text-white bg-black inline-block cursor-pointer">x</span>
-                                </div>
-                                <img src="{{ img.image.url }}" class="w-32 h-32 object-cover" alt="Carousel Image">
-                            </div>
-                        {% endfor %}
-                    </div>
                 </div>
-
-                <!-- Upload new carousel images -->
-                <div class="mt-4">
-                    <h3>Upload New Carousel Images</h3>
-                    <div id="carousel" class="flex flex-col gap-2">
-                        <input class="p-2 border rounded w-full" type="file" name="images" accept="image/*" multiple>
-                    </div>
+                    
                 </div>
 
                 <button class="w-full bg-green-500 p-2 rounded text-green-100 mt-4 hover:bg-green-400 transition">Confirm Edit</button>
@@ -120,19 +176,55 @@
     </div>
 
     <script>
+
         document.addEventListener("DOMContentLoaded", function() {
+    
+            // Image Upload
+            const addImageBtn = document.querySelector('#addImageBtn');
+            const carousel = document.querySelector('#carousel');
+    
+            if (addImageBtn && carousel) {  // Ensure elements exist
+                addImageBtn.addEventListener('click', () => {
+                    console.log('Add image button clicked');
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = 'image/*';
+                    fileInput.classList.add('p-2', 'border', 'rounded', 'w-full', 'sm:w-auto');
+                    carousel.appendChild(fileInput);
+                });
+            }
+    
+            // Hamburger Menu
+            const menu = document.querySelector('#menu');
+            const hambugerIcon = document.querySelector('#hambugerIcon');
+    
+            if (hambugerIcon && menu) {  // Ensure elements exist
+                const toggleMenu = function() {
+                    console.log('Hamburger menu clicked');
+                    if (menu.classList.contains('hidden')) {
+                        menu.classList.replace('hidden', 'block');
+                    } else {
+                        menu.classList.replace('block', 'hidden');
+                    }
+                };
+    
+                hambugerIcon.addEventListener('click', toggleMenu);
+            }
+    
+            // Flatpickr initialization for start_date and end_date
             flatpickr("input[name='start_date']", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
                 time_24hr: true
             });
-
+    
             flatpickr("input[name='end_date']", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
                 time_24hr: true
             });
-
+    
+            // Delete individual image functionality
             const deleteIcons = document.querySelectorAll('.delete-icon');
             deleteIcons.forEach(function (icon) {
                 icon.addEventListener('click', function () {
@@ -142,7 +234,7 @@
                     }
                 });
             });
-
+    
             function deleteImage(imageId) {
                 fetch(`{% url 'deleteholidayImage' pk=0 %}`.replace('/0/', `/${imageId}/`), {
                     method: 'DELETE',
@@ -153,7 +245,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        document.getElementById(`holiday-image-${imageId}`).remove();
+                        document.getElementById(`carousel-image-${imageId}`).remove();
                     } else {
                         alert('Failed to delete the image. Please try again.');
                     }
@@ -162,7 +254,46 @@
                     console.error('Error:', error);
                 });
             }
+    
+            // Delete all images functionality
+            const deleteAllBtn = document.getElementById('deleteAllImagesBtn');
+            if (deleteAllBtn) {
+                deleteAllBtn.addEventListener('click', function () {
+                    if (confirm('Are you sure you want to delete all carousel images for this competition?')) {
+                        deleteAllImages();
+                    }
+                });
+            }
+    
+            function deleteAllImages() {
+                const competitionId = "{{ competition.id }}";  // The current competition ID
+    
+                fetch(`/delete-images-holiday/${competitionId}/`, {  // Use the correct URL
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('All carousel images have been deleted.');
+                        // Remove all image containers
+                        document.querySelectorAll('.carousel-image-container').forEach(imageContainer => {
+                            imageContainer.remove();
+                        });
+                    } else {
+                        alert('Failed to delete images. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+    
         });
+    
     </script>
+    
 </body>
 </html>

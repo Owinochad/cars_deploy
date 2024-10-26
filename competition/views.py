@@ -4,17 +4,16 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from .models import *
+from django.conf import settings
 
 from xml.etree import ElementTree as ET
-
-DPO_COMPANY_TOKEN = '84B57785-1C87-48F1-9B0B-2781862D8671'  # Replace with actual token
-DPO_BASE_URL = 'https://secure.3gdirectpay.com/API/v6/'
-
-
+DPO_COMPANY_TOKEN = settings.DPO_COMPANY_TOKEN
+DPO_BASE_URL = settings.DPO_BASE_URL
 
 # Authentication models and functions
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
+from django.views.decorators.http import require_http_methods
 
 
 import json
@@ -49,61 +48,55 @@ from paypalrestsdk import Payment
 
 from django.db import transaction
 import logging
+from . utils import *
+# from decouple import config
+from django.conf import settings
+
 
 # Create your views here.
 
-def create_payment(request):
-    payment = Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"
-        },
-        "redirect_urls": {
-            "return_url": request.build_absolute_uri('/execute_payment/'), #"http://localhost:8000/payment/execute/",
-            "cancel_url": request.build_absolute_uri('/'), #"http://localhost:8000/"
-        },
-        "transactions": [{
-            "item_list": {
-                "items": [{
-                    "name": "Item Name",
-                    "sku": "item",
-                    "price": "10.00",
-                    "currency": "USD",
-                    "quantity": 1
-                }]
-            },
-            "amount": {
-                "total": "10.00",
-                "currency": "USD"
-            },
-            "description": "This is the payment description."
-        }]
-    })
+def create_ticket(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+            # Extract information from the request body
+        id = data.get('id')
+        print(id, data)
+        try:
+            payment_details = get_paypal_payment_details(id)
+            # Add tickets to the user's entries
+            basket_items = BasketItem.objects.filter(user=request.user)
+            for item in basket_items:
+                competition = item.competition
+                holiday = item.holicompetition
+                ticket_count = item.ticket_count
 
-    if payment.create():
-        print("Payment created successfully")
-        for link in payment.links:
-            if link.rel == "approval_url":
-                approval_url = str(link.href)
-                return redirect(approval_url)
-    else:
-        print(payment.error)  # Handle error
-    return render(request, 'frontend/payment_success.html')
+                # Create entries for the user
+                for _ in range(ticket_count):
+                    if competition:
+                        # Create competition entry and update tickets sold one by one
+                        Entry.objects.create(user=request.user, competition=competition)
+                        competition.tickets_sold += 1
+                        competition.save()
+                    elif holiday:
+                        # Create holiday entry and update tickets sold one by one
+                        Entry.objects.create(user=request.user, holiday=holiday)
+                        holiday.tickets_sold += 1
+                        holiday.save()
 
-def execute_payment(request):
-    payment_id = request.GET.get('paymentId')
-    payer_id = request.GET.get('PayerID')
+            # Optionally, clear the basket items after processing
+            BasketItem.objects.filter(user=request.user).delete()
+            
+            return JsonResponse({'status': 'success', 'message': 'Payment data received successfully'})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    print('if')    
+    return JsonResponse({'status':'error','message': str('bad request')}, status=400)      
 
-    payment = Payment.find(payment_id)
-
-    if payment.execute({"payer_id": payer_id}):
-        print("Payment executed successfully")
-        return render(request, 'frontend/payment_success.html')
-    else:
-        print(payment.error)  # Handle error
-    return render(request, 'frontend/payment_failure.html')
 
 def admin_dashboard(request):
+
 
     user_list = User.objects.all()[:3]
     user_count = User.objects.all().count()
@@ -329,7 +322,7 @@ def editholidayCompetition(request, pk):
         'competition_images': competition_images,
     }
 
-    return render(request, 'frontend/editHolidayCompetition.html', context)
+    return render(request, 'frontend/editholidayCompetition.html', context)
 
 # Delete a competition
 def deleteCompetition(request, pk):
@@ -375,6 +368,44 @@ def deleteholidayImage(request, pk):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+@require_http_methods(["DELETE"])
+def delete_images_compe(request, competition_id):
+    try:
+        # Get the specific HolidayCompetition instance
+        competition = get_object_or_404(Competition, pk=competition_id)
+
+        # Get all images related to the competition
+        competition_images = CompetitionImage.objects.filter(competition=competition)
+
+        # Delete each image and the related object
+        for image in competition_images:
+            if image.image:
+                image.image.delete()  # Delete the actual file
+            image.delete()  # Delete the database entry
+
+        return JsonResponse({'message': 'All images deleted successfully'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_http_methods(["DELETE"])
+def delete_images_holi(request, competition_id):
+    try:
+        # Get the specific HolidayCompetition instance
+        competition = get_object_or_404(HolidayCompetition, pk=competition_id)
+
+        # Get all images related to the competition
+        holiday_images = HoliCompetitionImage.objects.filter(competition=competition)
+
+        # Delete each image and the related object
+        for image in holiday_images:
+            if image.image:
+                image.image.delete()  # Delete the actual file
+            image.delete()  # Delete the database entry
+
+        return JsonResponse({'message': 'All images deleted successfully'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
 def index(request):
     competitions = Competition.objects.all().order_by('-start_date')[:4]
     holicompetition = HolidayCompetition.objects.all().order_by('-start_date')[:4]
@@ -421,20 +452,25 @@ def holidaycompetitions(request):
 
 
 def holicompetition_details(request, holicompetition_id):
-    competitions = HolidayCompetition.objects.all()
-    competition = get_object_or_404(HolidayCompetition, id=holicompetition_id)
-    img = HoliCompetitionImage.objects.all()
-    images = img.filter(competition=competition)
+    # Fetch the specific holiday competition by ID
+    holiday_competition = get_object_or_404(HolidayCompetition, id=holicompetition_id)
+    
+    # Fetch all holiday competitions (if needed for related competitions)
+    holiday_competitions = HolidayCompetition.objects.all()
+    
+    # Fetch associated images for the specific holiday competition
+    images = HoliCompetitionImage.objects.filter(competition=holiday_competition)
 
-    specs_list = competition.description.splitlines()
+    # Split the description into a list of specifications
+    specs_list = holiday_competition.description.splitlines()
    
     context = {
-        'competition': competition,
+        'holiday_competition': holiday_competition,
         'images': images,
-        'competitions': competitions,
+        'holiday_competitions': holiday_competitions,
         'specs_list': specs_list,
-        
     }
+    
     return render(request, 'frontend/holidaycompedetails.html', context)
 
 
@@ -521,40 +557,37 @@ def add_to_basket(request, id):
     competition = get_object_or_404(Competition, id=id)
 
     if request.method == 'POST':
-
         ticket_count = int(request.POST['ticket_count'])
-
-        print('first if')
+        print('First if')
 
         if ticket_count > 0 and ticket_count <= (competition.total_tickets - competition.tickets_sold):
-
             if request.user.is_authenticated:
-
                 basket_item, created = BasketItem.objects.get_or_create(
                     user=request.user,
                     competition=competition,
                     defaults={'ticket_count': ticket_count}
                 )
-
                 print('2 if')
 
                 if not created:
                     basket_item.ticket_count += ticket_count
                     basket_item.save()
                     print('3rd if')
-            
             else:
-                #unauthenticated users
+                # Unauthenticated users
                 basket = request.session.get('basket', [])
+                print("Current session basket data:", basket)  # Debugging: Print the session data
 
-                #check if item is already in basket
-                item_found = next((item for item in basket if item['competition_id'] == competition.id), None)
+                # Check if the item is already in the session basket
+                item_found = next((item for item in basket if item.get('competition_id') == competition.id), None)
+
+                print('Checking session basket for unauthenticated user')
 
                 if item_found:
                     item_found['ticket_count'] += ticket_count
                 else:
                     basket.append({
-                        'competition_id': competition.id,
+                        'competition_id': competition.id,  # Ensure you're using the correct key
                         'ticket_count': ticket_count,
                     })
                 request.session['basket'] = basket
@@ -566,50 +599,64 @@ def add_to_basket(request, id):
 
 
 def add_to_baskety(request, id):
-    competition = get_object_or_404(HolidayCompetition, id=id)
+    # Fetch the specific holiday competition by ID
+    holiday_competition = get_object_or_404(HolidayCompetition, id=id)
 
     if request.method == 'POST':
-
         ticket_count = int(request.POST['ticket_count'])
+        print('Checking ticket count')
 
-        print('first holi if')
-
-        if ticket_count > 0 and ticket_count <= (competition.total_tickets - competition.tickets_sold):
-
+        # Ensure the ticket count is valid
+        if ticket_count > 0 and ticket_count <= (holiday_competition.total_tickets - holiday_competition.tickets_sold):
             if request.user.is_authenticated:
-
+                # For authenticated users, create or update the basket item
                 basket_item, created = BasketItem.objects.get_or_create(
                     user=request.user,
-                    holicompetition=competition,
+                    holicompetition=holiday_competition,
                     defaults={'ticket_count': ticket_count}
                 )
 
-                print('2 holi if')
+                print('Basket item checked for authenticated user')
+                print(f"Basket item: {basket_item}, Created: {created}")
 
                 if not created:
+                    # If the item already exists, update the ticket count
+                    print(f"Before update, ticket count: {basket_item.ticket_count}")
                     basket_item.ticket_count += ticket_count
                     basket_item.save()
-                    print('3rd if')
-            
+                    print(f"Updated ticket count for existing basket item: {basket_item.ticket_count}")
+                else:
+                    print(f"New basket item created with ticket count: {basket_item.ticket_count}")
             else:
-                #unauthenticated users
+                # For unauthenticated users, handle session-based basket
                 basket = request.session.get('basket', [])
+                print("Current session basket data:", basket)
 
-                #check if item is already in basket
-                item_found = next((item for item in basket if item['competition_id'] == competition.id), None)
+                # Check if the item is already in the session basket
+                item_found = next((item for item in basket if item['holicompetition_id'] == holiday_competition.id), None)
+
+                print('Checking session basket for unauthenticated user')
 
                 if item_found:
+                    # If item found, update the ticket count
                     item_found['ticket_count'] += ticket_count
                 else:
+                    # Otherwise, add a new entry to the basket
                     basket.append({
-                        'competition_id': competition.id,
+                        'holicompetition_id': holiday_competition.id,
                         'ticket_count': ticket_count,
                     })
                 request.session['basket'] = basket
-            
-        return redirect('holicompetition', holicompetition_id=competition.id)
+                print('Session basket updated with new item')
 
-    return redirect('holicompetition', holicompetition_id=competition.id)
+        else:
+            print(f"Invalid ticket count: {ticket_count}")
+
+        # Redirect to the holiday competition details page
+        return redirect('holicompetition', holicompetition_id=holiday_competition.id)
+
+    # Redirect in case of a non-POST request
+    return redirect('holicompetition', holicompetition_id=holiday_competition.id)
 
 
 
@@ -620,7 +667,7 @@ def view_basket(request):
     if request.user.is_authenticated:
         # Fetch all BasketItem entries for the authenticated user
         basket_items = BasketItem.objects.filter(user=request.user)
-        
+
         # Calculate total cost for authenticated users
         total_cost = sum(
             (item.competition.ticket_price * item.ticket_count if item.competition else 0) +
@@ -631,34 +678,47 @@ def view_basket(request):
     else:
         # For unauthenticated users, fetch items from the session
         basket = request.session.get('basket', [])
-        
+        print("Session basket data:", basket)  # Debugging: Print the session data
+
+        # Iterate over the items in the session basket
+        updated_basket = []
         for item in basket:
             if 'competition_id' in item:
-                # Fetch competition item
-                competitions = Competition.objects.all()[:2]
-                competition = get_object_or_404(Competition, id=item['competition_id'])
-                total_cost += competition.ticket_price * item['ticket_count']
-                basket_items.append({
-                    'id': competition.id,
-                    'competition': competition,
-                    'ticket_count': item['ticket_count'],
-                    'competitions': competitions,
-                })
+                try:
+                    # Fetch competition item
+                    competition = Competition.objects.get(id=item['competition_id'])
+                    total_cost += competition.ticket_price * item['ticket_count']
+                    basket_items.append({
+                        'id': competition.id,
+                        'competition': competition,
+                        'ticket_count': item['ticket_count'],
+                    })
+                    updated_basket.append(item)  # Only append valid items
+                except Competition.DoesNotExist:
+                    print(f"Competition with ID {item['competition_id']} no longer exists.")
+                    # Optionally, remove invalid item from session here
             elif 'holicompetition_id' in item:
-                # Fetch holiday competition item
-                holicompetitions = HolidayCompetition.objects.all()[:1]
-                holicompetition = get_object_or_404(HolidayCompetition, id=item['holicompetition_id'])
-                total_cost += holicompetition.ticket_price * item['ticket_count']
-                basket_items.append({
-                    'id': holicompetition.id,
-                    'holicompetition': holicompetition,
-                    'ticket_count': item['ticket_count'],
-                    'competitions': holicompetitions,
-                })
+                try:
+                    # Fetch holiday competition item
+                    holicompetition = HolidayCompetition.objects.get(id=item['holicompetition_id'])
+                    total_cost += holicompetition.ticket_price * item['ticket_count']
+                    basket_items.append({
+                        'id': holicompetition.id,
+                        'holicompetition': holicompetition,
+                        'ticket_count': item['ticket_count'],
+                    })
+                    updated_basket.append(item)  # Only append valid items
+                except HolidayCompetition.DoesNotExist:
+                    print(f"HolidayCompetition with ID {item['holicompetition_id']} no longer exists.")
+                    # Optionally, remove invalid item from session here
+
+        # Update the session with only valid items
+        request.session['basket'] = updated_basket
 
     competitions = Competition.objects.all()[:3]
-    
-    return render(request, 'frontend/view_basket.html', {'basket_items': basket_items, 'total_cost': total_cost , 'competitions': competitions ,})
+
+    return render(request, 'frontend/view_basket.html', {'basket_items': basket_items, 'total_cost': total_cost, 'competitions': competitions})
+
 
 def remove_from_basket(request, item_id):
     item = get_object_or_404(BasketItem, id=item_id)
@@ -670,8 +730,8 @@ def remove_from_basket(request, item_id):
 
 
 def token(request):
-    consumer_key = 'aWrsHLr8OiGyUlh2SjNVOalHxLOzAJGt'  # Consider using environment variables for sensitive data
-    consumer_secret = 'my1Ofjv8W34lyVQx'
+    consumer_key = settings.CONSUMER_KEY
+    consumer_secret = settings.CONSUMER_SECRET
     api_URL = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
     try:
@@ -718,9 +778,6 @@ def check_out(request):
 
     # Calculate the total amount and prepare the item names
     total_amount = 0
-    item_names = []
-
-
 
     total_amount = sum(
         (item.competition.ticket_price * item.ticket_count if item.competition else 0) +
@@ -728,37 +785,17 @@ def check_out(request):
         for item in basket_items
     )
 
-        # if item.competition:
-        #     total_amount += item.competition.ticket_price * item.ticket_count
-        #     item_names.append(item.competition.car_model)
-        # elif item.holicompetition:
-        #     total_amount += item.holicompetition.ticket_price * item.ticket_count
-        #     item_names.append(item.holicompetition.name)
-
-    item_name_string = ', '.join(item_names)  # Combine item names into a single string
-    host = request.get_host()
-
-    # Prepare the PayPal checkout data
-    paypal_checkout = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'no_shipping': '2',
-        'amount': f"{convert_to_usd(total_amount):.2f}",  
-        'item_name': item_name_string,  
-        'invoice': str(uuid.uuid4()),  
-        'currency_code': 'USD', 
-        'notify_url': f'http://{host}{reverse("paypal-ipn")}',  
-        'return_url': f'http://{host}{reverse("payment_success")}', 
-        'cancel_url': f'http://{host}{reverse("payment_failure")}',  
-    }
-
-    # Create the PayPal payment form
-    paypal_form = PayPalPaymentsForm(initial=paypal_checkout)
+    total_amount_usd = round(convert_to_usd( sum(
+        (item.competition.ticket_price * item.ticket_count if item.competition else 0) +
+        (item.holicompetition.ticket_price * item.ticket_count if item.holicompetition else 0)
+        for item in basket_items
+    )),2)
 
 
     return render(request, 'frontend/checkout.html', {
         'basket_items': basket_items,
         'Amount': total_amount,
-        'paypal_form': paypal_form,
+        'Amount_usd': total_amount_usd,
     })
 
 
@@ -777,19 +814,7 @@ def DPO_payment(request):
         for item in basket_items
     )
 
-    amount = total_amount
-    
-
-    # Calculate the total amount considering competition and holicompetition
-    # for item in basket_items:
-    #     if item.competition:  # Check if the competition exists
-    #         amount += item.competition.ticket_price * item.ticket_count
-    #     elif item.holicompetition:  # Check if the holicompetition exists
-    #         amount += item.holicompetition.ticket_price * item.ticket_count
-        
-    
-
-
+    amount = total_amount 
 
     currency = 'KES'  # Customize based on user choice
     transaction_reference = 'test_transaction_reference'  # Use a unique reference for testing
@@ -813,12 +838,14 @@ def DPO_payment(request):
         if result == '000' and trans_token:
             # Redirect to the payment page
             payment_url = f'https://secure.3gdirectpay.com/payv2.php?ID={trans_token}'
+
             return redirect(payment_url)
         else:
             return HttpResponse(f"Error: {result_explanation}")  # Display the error
     else:
-        return "Failed to connect to DPO test environment"
-
+        return "Failed to connect to DPO API"
+    
+    
 def stk(request):
     if not request.user.is_authenticated:
         return HttpResponse("Unauthorized", status=401)
@@ -836,8 +863,6 @@ def stk(request):
         elif item.holicompetition:  # Check if holicompetition is not None
             total_cost += item.holicompetition.ticket_price * item.ticket_count
             totalcost = str(round(total_cost))
-
-    print(total_cost)
             
     if request.method == "POST":
         phone = request.POST.get('phone')
@@ -884,35 +909,70 @@ def stk(request):
             for transaction in callback_data_list:
                 if transaction.get("checkoutrequestid") == checkout_request_id:
                     found = True
-                    print(f"Checkout Request ID {checkout_request_id} found in the list.")
-                    # You can also perform additional actions here, like printing transaction details
-                    print("Transaction details:", transaction)
                     
                     if transaction.get("resultcode") == 0:
         
                         # Add tickets to the user's entries
-                        basket_items = BasketItem.objects.filter(user=request.user)
                         for item in basket_items:
                             competition = item.competition
+                            holiday = item.holicompetition
                             ticket_count = item.ticket_count
-                            
+
                             # Create entries for the user
                             for _ in range(ticket_count):
-                                Entry.objects.create(user=request.user, competition=competition)
-                            
+                                if competition:
+                                    # Create competition entry and update tickets sold
+                                    entry = Entry.objects.create(user=request.user, competition=competition)
+                                    competition.tickets_sold += 1
+                                    competition.save()
+                                    # Optionally, generate a ticket number here if needed
+                                    ticket_number = Ticket.generate_ticket_number(competition)
+                                    Ticket.objects.create(user=request.user, competition=competition, number=ticket_number)
+                                elif holiday:
+                                    # Create holiday entry and update tickets sold
+                                    entry = Entry.objects.create(user=request.user, holiday=holiday)
+                                    holiday.tickets_sold += 1
+                                    holiday.save()
+                                    # Generate a ticket number for the holiday entry
+                                    ticket_number = Ticket.generate_ticket_number(holiday)
+                                    Ticket.objects.create(user=request.user, holiday=holiday, number=ticket_number)
 
-                            # Update tickets_sold for the competition
-                            competition.tickets_sold += ticket_count
-                            competition.save()
-                        
-                        # Optionally, clear the basket items after processing
+                        # Clear the basket items after processing
                         BasketItem.objects.filter(user=request.user).delete()
+
                         save_transactions(callback_data_list, request)
 
                         return redirect(payment_success)
-                    else:
                     
-                        print(transaction.get("resultdesc"))
+                    else:
+
+                        for item in basket_items:
+                            competition = item.competition
+                            holiday = item.holicompetition
+                            ticket_count = item.ticket_count
+
+                            # Create entries for the user
+                            for _ in range(ticket_count):
+                                if competition:
+                                    # Create competition entry and update tickets sold
+                                    entry = Entry.objects.create(user=request.user, competition=competition)
+                                    competition.tickets_sold += 1
+                                    competition.save()
+                                    # Optionally, generate a ticket number here if needed
+                                    ticket_number = Ticket.generate_ticket_number(competition)
+                                    Ticket.objects.create(user=request.user, competition=competition, number=ticket_number)
+                                elif holiday:
+                                    # Create holiday entry and update tickets sold
+                                    entry = Entry.objects.create(user=request.user, holiday=holiday)
+                                    holiday.tickets_sold += 1
+                                    holiday.save()
+                                    # Generate a ticket number for the holiday entry
+                                    ticket_number = Ticket.generate_ticket_number(holiday)
+                                    Ticket.objects.create(user=request.user, holiday=holiday, number=ticket_number)
+
+                        # Clear the basket items after processing
+                        # BasketItem.objects.filter(user=request.user).delete()
+
                         return redirect(payment_failure)          
                     
             if not found:
@@ -967,4 +1027,17 @@ def payment_failure(request):
     
 def base(request):
     return render(request, 'frontend/base.html', context={})
+
+def terms_and_conditions(request):
+    return render(request, 'frontend/t&c.html', context={})
+    
+def privacy_policy(request):
+    return render(request, 'frontend/privacy_policy.html', context={})
+
+    
+def cookie_policy(request):
+    return render(request, 'frontend/cookie_policy.html', context={})
+    
+def how_it_works(request):
+    return render(request, 'frontend/how_it_works.html', context={})
 

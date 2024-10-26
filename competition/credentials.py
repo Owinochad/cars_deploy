@@ -3,11 +3,14 @@ import json
 from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import base64
+from decouple import config
+from django.conf import settings
+
 
 
 class MpesaC2bCredential:
-    consumer_key = 'aWrsHLr8OiGyUlh2SjNVOalHxLOzAJGt'
-    consumer_secret = 'my1Ofjv8W34lyVQx'
+    consumer_key = settings.CONSUMER_KEY
+    consumer_secret = settings.CONSUMER_SECRET
     token_url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
     api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
 
@@ -28,8 +31,8 @@ class MpesaAccessToken:
 
 class LipanaMpesaPpassword:
     lipa_time = datetime.now().strftime('%Y%m%d%H%M%S')
-    business_short_code = "4029613"
-    passkey = '706964da1cb4da9190862dea0167416ff2ddda1ac239604d439b0061ba1a69a7'
+    business_short_code = settings.BUSINESS_SHORT_CODE
+    passkey = settings.PASSKEY
 
     data_to_encode = business_short_code + passkey + lipa_time
     online_password = base64.b64encode(data_to_encode.encode())

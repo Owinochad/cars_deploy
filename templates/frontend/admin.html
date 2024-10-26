@@ -24,11 +24,13 @@
           </svg> 
           <div class="hidden sm:block hidden">
             <ul class="text-center text-gray-500 flex">
-              <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+            <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
             <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
-            <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions</a></li>
+            <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
+            <li class="pt-6"><a href="{% url 'listCompetitions' %}">HolidayCompetitions List</a></li>
             <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
             <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
+            
             </ul>
           </div>       
         </div>
@@ -60,7 +62,8 @@
           <ul class="mt-8 text-gray-500">
             <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
             <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
-            <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions</a></li>
+            <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
+            <li class="pt-6"><a href="{% url 'listHolidayCompetitions' %}">HolidayCompetitions List</a></li>
             <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
             <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
           </ul>
@@ -132,7 +135,7 @@
               {% for competition in competition_list %}
 
               <tr class="text-sm">
-                <td class="py-2 font-bold">{{competition.car_brand}}</td>
+                <td class="py-2 font-bold">{{competition.car_make}}</td>
                 <td>3</td>
                 <td>
                   <div class="bg-green-100 w-max rounded-md p-1 border border-green-500 flex text-xs gap-1 items-center text-green-500 ">

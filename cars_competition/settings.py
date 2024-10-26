@@ -24,15 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 
-PAYPAL_CLIENT_ID = 'AVkzlBzyTQHXgGPeliPnatbFURoFJLaD7VVq61Rm3y2pAx2obmXYfNDAM161NtNIHLDOrK_fiJByjhQ6'
-PAYPAL_CLIENT_SECRET = 'EKPTWNURu_GRwHDaJUdzPsOkHHJCtyh_t11ZurRobu_aH69BI_ew593V1CkLIEhQPv0-jWfjfiHA5rPO'
-
-paypalrestsdk.configure({
-    "mode": "sandbox",  # Change to "live" for production
-    "client_id": PAYPAL_CLIENT_ID,
-    "client_secret": PAYPAL_CLIENT_SECRET
-})
-
 env_file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env.prod')
   # Correct path to .env.dev
 
@@ -44,6 +35,24 @@ config = Config(RepositoryEnv(env_file_path))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+
+
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = config('PAYPAL_CLIENT_SECRET')
+PAYPAL_API_URL = config('PAYPAL_API_URL')
+
+paypalrestsdk.configure({
+    "mode": "sandbox",  # Change to "live" for production
+    "client_id": PAYPAL_CLIENT_ID,
+    "client_secret": PAYPAL_CLIENT_SECRET,
+})
+
+CONSUMER_KEY = config('CONSUMER_KEY')
+CONSUMER_SECRET = config('CONSUMER_SECRET')
+BUSINESS_SHORT_CODE = config('BUSINESS_SHORT_CODE')
+PASSKEY = config('PASSKEY')
+DPO_COMPANY_TOKEN = config('DPO_COMPANY_TOKEN')
+DPO_BASE_URL = config('DPO_BASE_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -93,14 +102,22 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
 
-    'paypal.standard.ipn',
+    # 'paypal.standard.ipn',
+    'corsheaders',
 
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -140,7 +157,7 @@ ROOT_URLCONF = 'cars_competition.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR/ 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -198,7 +215,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -210,7 +227,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type

@@ -9,18 +9,32 @@
     {% load custom_filters %}
     {% load static %}
     <style>
-        .carousel-container {
-    overflow: hidden;
-}
+                .carousel-container {
+            overflow: hidden;
+        }
 
-.carousel-slides {
-    transition: transform 0.5s ease-in-out;
-}
+        .carousel-slides {
+            transition: transform 0.5s ease-in-out;
+        }
 
-.carousel-slide {
-    flex-shrink: 0;
-    width: 100%;
-}
+        .carousel-slide {
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+                #competitions-dropdown {
+                    display: none;
+                }
+            }
+
+            .scrollbar-hidden::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hidden {
+                -ms-overflow-style: none;  /* Internet Explorer 10+ */
+                scrollbar-width: none;  /* Firefox */
+            }
     </style>
 
 </head>
@@ -45,9 +59,10 @@
         <div class=" absolute inset-0 flex justify-center items-center bg-black/50">
             <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full">
                 <div class="flex flex-col md:flex-row">
-                    <div class="md:w-3/4 p-6 max-h-48 overflow-y-auto scrollbar-hidden">
-                        <h4 class="text-2xl font-bold mb-4">Shopping Cart</h4>
-                        <p class="text-gray-600">Items: {{ basket_items|length }}</p>
+                    
+                    <div class="md:w-3/4 p-4 max-h-48 overflow-y-auto">
+                        <h4 class="text-2xl font-bold  text-center mb-4">Shopping Cart <span class="text-right ml-8"> Items: {{ basket_items|length }}</span> </h4>
+                       
         
                         {% if basket_items %}
                         {% for item in basket_items %}
@@ -107,21 +122,24 @@
                         </div>
                     </div>
                 </div>
-                <div class=" font-bold p-2 mt-6">
-                    <a href="{% url 'competitions' %}" class="text-red-500 hover:underline">&leftarrow; Back to the game</a>
+                <div class="font-bold ml-8 text-2xl">
+                    <a href="{% url 'competitions' %}" class="text-red-500 hover:text-red-700 hover:underline transition-transform transform duration-300 ease-in-out hover:scale-110 hover:-translate-y-1 hover:animate-bounce">
+                        &leftarrow; Back to the game
+                    </a>
                 </div>
-                <div class="pt-4 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-500">
+
+                <!-- <div class="pt-4 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-500">
                     <div class="text-left">
-                        <h1 class="font-bold text-gray-900 mb-4">Other People Play These Competitions Below. <span class="font-bold text-red-500 ">Win Now!</span> </h1>
+                        <h1 class="font-bold text-gray-900 mb-4">Other People Play These Competitions Below. <span class="font-bold text-red-500 text-2xl">Win Now!</span> </h1>
                     </div>
-                    <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500" id="carousel">
+                    <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500 p-2 ">
                         {% if competitions %}
                         {% for competition in competitions %}
-                        <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0" id="card">
-                            <a href="{% url 'competition' competition.id %}"></a>
+                        <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out"  id="card">
+                            <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
                             <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
-                            </a>
-                            <div class="p-2">
+                            
+                            <div class="p-4">
                                 <div class="flex justify-between">
                                     <div class=" h-2 w-4/5 rounded-full bg-gray-200 mt-2">
                                         <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 "></div>
@@ -133,7 +151,9 @@
                                     <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
-                                    <p class="text-orange-600">1 day</p>                  
+                                    <p class="text-orange-600">1 day</p> 
+                                    
+                                </a>
                                 </div>
                                 <div class="flex justify-between items-center mt-2 text-orange-500">
                                     <p class="text-xl">ksh  {{ competition.ticket_price }}</p>
@@ -145,13 +165,82 @@
                         </div>
                         {% endfor %}
                         {% endif %}
+                        <br>
                     </div>
+                </div> -->
+
+                 <!-- Dropdown Button for Small Screens -->
+        <div class="md:hidden p-4 flex justify-center">
+            <button id="toggle-competitions" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                Show Competitions
+            </button>
+        </div>
+
+        <!-- Competitions Section (Initially Hidden on Small Screens) -->
+        <div id="competitions-dropdown" class="hidden md:block p-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-500">
+            <div class="text-left">
+                <h1 class="font-bold text-gray-900 mb-4">
+                    Other People Play These Competitions Below. <span class="font-bold text-red-500 text-2xl">Win Now!</span>
+                </h1>
+            </div>
+            <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500 p-2">
+                {% if competitions %}
+                {% for competition in competitions %}
+                <div class="mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
+                    <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
+                        <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
+                        <div class="p-4">
+                            <div class="flex justify-between">
+                                <div class="h-2 w-4/5 rounded-full bg-gray-200 mt-2">
+                                    <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 "></div>
+                                </div>
+                                <p class="text-gray-800 text-xs">50% sold</p>
+                            </div>
+                            <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_brand }} Tax free</p>
+                            <div class="flex items-center text-xs p-1 bg-orange-200 w-max">
+                                <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                                <p class="text-orange-600">1 day</p> 
+                            </div>
+                            <div class="flex justify-between items-center mt-2 text-orange-500">
+                                <p class="text-xl">ksh {{ competition.ticket_price }}</p>
+                                <svg class="size-10 fill-orange-500 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>                  
+                            </div>
+                        </div>
+                    </a>
                 </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
         </div>
 
     </div>
    
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggle-competitions');
+            const competitionsDropdown = document.getElementById('competitions-dropdown');
+    
+            toggleButton.addEventListener('click', function () {
+                if (competitionsDropdown.classList.contains('hidden')) {
+                    competitionsDropdown.classList.remove('hidden');
+                    toggleButton.innerText = 'Hide Competitions';
+                } else {
+                    competitionsDropdown.classList.add('hidden');
+                    toggleButton.innerText = 'Show Competitions';
+                }
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
