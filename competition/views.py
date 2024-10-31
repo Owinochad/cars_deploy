@@ -633,7 +633,8 @@ def add_to_baskety(request, id):
                 print("Current session basket data:", basket)
 
                 # Check if the item is already in the session basket
-                item_found = next((item for item in basket if item['holicompetition_id'] == holiday_competition.id), None)
+                # Check if the item is already in the session basket
+                item_found = next((item for item in basket if item.get('holicompetition_id') == holiday_competition.id), None)
 
                 print('Checking session basket for unauthenticated user')
 
@@ -716,8 +717,9 @@ def view_basket(request):
         request.session['basket'] = updated_basket
 
     competitions = Competition.objects.all()[:3]
+    holidays = HolidayCompetition.objects.all()[:1]
 
-    return render(request, 'frontend/view_basket.html', {'basket_items': basket_items, 'total_cost': total_cost, 'competitions': competitions})
+    return render(request, 'frontend/view_basket.html', {'basket_items': basket_items, 'total_cost': total_cost, 'competitions': competitions, 'holidays':holidays})
 
 
 def remove_from_basket(request, item_id):

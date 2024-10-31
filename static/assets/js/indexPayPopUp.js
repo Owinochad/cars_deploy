@@ -1,8 +1,9 @@
+// hii ni indexPayPopUp.js ieke kwa base ndo iende kwa pages zote
 document.addEventListener('DOMContentLoaded', () => {
   // Popup Logic
-  const popUp = document.getElementById('pop-up');
+  const popUp = document.getElementById('pay-pop-up');
   const showPopups = document.querySelectorAll('.show-pop-up');
-  const hidePopup = document.getElementById('x');
+  const hidePopup = document.getElementById('pay-x');
 
   const competitionImage = popUp.querySelector('img');
   const carBrandElement = popUp.querySelector('#car_brand');
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                    ${carModel}, 
                    ${ticketPrice}, 
                    ${imageUrl}`)
-      console.log(`values not found`)
+      console.log('values not found')
 
       // Update the popup fields with competition data
       carBrandElement.textContent = carBrand;
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Show the popup
       popUp.classList.remove('hidden');
       console.log(`Popup opened for competition ID: ${competitionId}`);
-      console.log(`values not found`)
+      console.log('values not found')
     };
 
     const hide = () => {
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showPopups.forEach(button => {
       button.addEventListener('click', () => {
+        console.log('clicked')
         show(button); // Pass the button element to the show function
       });
     });
@@ -98,26 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     quantityInput.addEventListener('input', updateTotalPrice);
   }
-
-  // Quick Select Links Logic
-    const ticketInput = document.getElementById('quantity');
-    const quickSelectLinks = document.querySelectorAll('.quick-select');
-  
-    if (quantityInput && quickSelectLinks) {
-      quickSelectLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault(); // Prevent default link behavior
-          const value = e.target.getAttribute('data-value');
-          quantityInput.value = value;
-          const event = new Event('input'); // Simulate input event for quantity update
-          quantityInput.dispatchEvent(event);
-        });
-      });
-    }
-  });
-
-
-
+});
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     // Popup Logic
@@ -146,10 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
 //         totalPriceElement.textContent = ticketPrice; // Default to one ticket initially
   
 //         // Update form action URL
-//         formElement.setAttribute('action', `/add_to_basket/${competitionId}`);
+//         formElement.setAttribute('action', /add_to_basket/${competitionId});
 
 //         popUp.classList.remove('hidden');
-//         console.log(`Popup opened by button with ID: ${buttonId}`);
+//         console.log(Popup opened by button with ID: ${buttonId});
 //       };
   
 //       const hide = () => {
@@ -219,5 +202,5 @@ document.addEventListener('DOMContentLoaded', () => {
 //           quantityInput.dispatchEvent(event);
 //         });
 //       });
-//     }
-//   });
+//     }
+//   });

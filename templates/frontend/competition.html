@@ -137,33 +137,41 @@ competition
         <!-- Example card for competitions -->
         {% if competitions %}
         {% for competition in competitions %}
-        <div class="mt-4 bg-white w-full md:w-96 lg:w-auto  flex-shrink-0 rounded-lg border overflow-hidden hover:shadow-lg transition-transform transform hover:scale-105 duration-200 ease-in-out" id="card">
-            <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
-                <img src="{{ competition.image.url }}" alt="{{ competition.car_model }}" class="w-full rounded-t-lg">
-                <div class="p-4">
-                    <div class="flex justify-between mb-2">
-                        <div class="h-2 w-4/5 rounded-full bg-gray-200">
-                            <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                  <div class=" rounded-lg border overflow-hidden  mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
+                    <!-- Wrap the competition details in the anchor tag -->
+                    <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
+                        <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.car_model }}" class="rounded-t-lg">
+                        <div class="p-4">
+                          <div class="flex justify-between mb-2">
+                            <div class="h-2 w-4/5 rounded-full bg-gray-200">
+                                <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                            </div>
+                            <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
+                            </div>
+                          
+                            <p class="py-2 text-gray-700 font-bold">Win This {{ competition.car_make }} NOW </p>
+                            <div class="flex items-center text-xs p-2 bg-orange-200 w-max rounded-md">
+                                <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                                <p class="text-orange-600 ml-1">{{competition.days_rem}} days</p>                  
+                            </div>
                         </div>
-                        <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
-                    </div>
-                    <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_make }} Tax free</p>
-                    <div class="flex items-center text-xs p-2 bg-orange-200 w-max rounded-md">
-                        <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </a>
+                    <!-- Adjust the flexbox and reduce unnecessary padding or margin -->
+                    <div class="flex justify-between items-center px-4 pb-4 -mt-2 text-orange-500">
+                        <p class="text-xl"> Tickets at ksh{{ competition.ticket_price }}</p>
+                        <!-- Plus sign (separate from the link) -->
+                        <svg 
+                            id="{{ competition.id }}" 
+                            class="show-pop-up size-10 fill-orange-500 text-white cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            data-competition-id="{{ competition.id }}" data-car-brand="{{ competition.car_make }}" data-car-model="{{ competition.car_model }}" data-ticket-price="{{ competition.ticket_price }}" data-form-url="{% url 'add_to_basket' competition.id %}" data-image-url="{{ competition.image.url }}">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        <p class="text-orange-600 ml-1">{{competition.days_rem}} days</p>
                     </div>
                 </div>
-            </a>
-            <div class="flex justify-between items-center px-4 pb-4 text-orange-500">
-                <p class="text-xl">Ksh {{ competition.ticket_price }}</p>
-                <svg class="size-10 fill-orange-500 text-white cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </div>
-        </div>
-        {% endfor %}
+              {% endfor %}
+
         {% endif %}
     </div>
 </div>

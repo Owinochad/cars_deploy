@@ -38,7 +38,8 @@ class Wallet(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.amount}'
-
+    
+    @staticmethod
     def update_balance(self, amount_change, transaction_type):
         """Update the wallet balance and create a transaction."""
         try:
@@ -54,6 +55,7 @@ class Wallet(models.Model):
                 transaction_type=transaction_type,
                 amount=amount_change,
             )
+            print(f'Balance{amount_change}')
         except Exception as e:
             print(f"Error while updating balance or creating transaction: {e}")
 

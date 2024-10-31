@@ -58,9 +58,9 @@ DPO_BASE_URL = config('DPO_BASE_URL')
 DEBUG = True
 
 ALLOWED_HOSTS= []
-CSRF_TRUSTED_ORIGINS=[
-    'http://127.0.0.1:8000',
-    ]
+# CSRF_TRUSTED_ORIGINS=[
+#     'http://127.0.0.1:8000',
+#     ]
 
 SITE_ID = 1
 
@@ -70,6 +70,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# ACCOUNT_EMAIL_VERIFICATION = True
+ACCOUNT_EMAIL_REQUIRED = True
 
 
 # Application definition

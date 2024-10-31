@@ -48,53 +48,57 @@
 </head>
 <body>
 
-    <!-- ====================
-        basket
-        ==================== -->
-        <!-- <div id="basket" class="w-96 hidden bg-gray-100  fixed top-0 right-0 transform -translate-x-2 z-20 translate-y-20 rounded-lg shadow-lg p-4">
-            <h2 class="text-orange-500 font-bold">Basket</h2>
-        
-            {% for item in basket_items %}
-            <div class="flex justify-between items-center text-xs text-gray-700">
-                <svg  class="w-4 stroke-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                  </svg>
-                <img class="w-16" src="{{ item.competition.image.url }}" alt="{{ item.competition.car_model }}">
-                <div class="flex flex-col  items-center">
-                    <p>{{ item.competition.car_model }}</p>
-                </div>
-
-                <div class="flex flex-col  items-center">
-                    <p>{{ item.ticket_count }}</p>
-                </div>
-
-                <div class="flex space-x-1 font-bold">
-            
-                    <p>Ksh {{ item.competition.ticket_price|multiply:item.ticket_count|floatformat:2 }}</p>
-        
-                </div>
-                <div class="flex items-center space-x-1">
-                    <p class="text-black font-bold">ksh {{competition.ticket_price}}</p>
-                </div>
-            </div>
-            {% endfor %}
-
-            <div>
-                <h2 class="text-gray-700 font-bold tracking-wide uppercase my-4">Summary</h2>
-                <div class="flex justify-between text-sm font-bold mb-3">
-                    <p>ITEMS  </p>
-                    <p>KES {{ total_cost }}</p>
-                </div>
-
-                <div class="flex justify-between text-sm font-bold mb-3">
-                    <p>Total</p>
-                    <p>KES {{ total_cost }}</p>
-                </div>
-
-            </div>
-            <a href="{% url 'view_basket'%}" class="block px-8 py-3 bg-orange-500 rounded shadow text-white text-center animate-bounce">CHECK BASKET >></a>
-        </div> -->
-    
+    <!-- =======================
+Pop up
+======================= -->
+<div id="pay-pop-up" class="bg-black/50 transform transition-all opacity-100 scale-100 p-4 sm:p-8 md:p-20 min-h-screen z-10 fixed hidden inset-0 flex justify-center items-center">
+    <div class="bg-white w-11/12 sm:w-4/5 md:w-2/3 lg:w-2/5 p-4 sm:p-6 md:p-10 rounded-lg shadow-xl">
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="grid grid-cols-3 pb-4 font-bold text-gray-600 tracking-wide">
+          <p></p>
+          <h2 class="justify-self-center sm:text-lg md:text-xl">Buy tickets</h2>
+          <a href="#" id="pay-x" class="justify-self-end text-sm sm:text-base md:text-lg">X</a>
+        </div>
+  
+        <div class="flex items-center mb-4">
+          <img class="w-2/5 rounded aspect-video" src="{{ competition.image.url }}" alt="{{ competition.car_model }}">
+          <div class="ml-6">
+            <h2 id="car_brand" class="text-sm sm:text-base md:text-lg font-bold">{{ competition.car_make }}</h2>
+            <p id="car_model" class="my-1 text-xs sm:text-sm md:text-base text-gray-400 font-bold">{{ competition.car_model }}</p>
+            <p class="text-sm sm:text-base md:text-lg">1 ticket = Ksh <span id="ticket-price">{{ competition.ticket_price }}</span></p>
+            <p class="text-sm sm:text-base md:text-lg font-bold"> Ksh <span id="total-price">{{ competition.ticket_price }}</span></p>
+          </div>
+        </div>
+  
+        <div class="mt-4">
+          <h2 class="text-sm sm:text-base md:text-lg text-gray-600 font-bold">Quantity</h2>
+          <div class="flex gap-4 items-center py-2">
+            <button type="button" class="bg-white-500 text-xs sm:text-sm md:text-base px-2 py-2 rounded" id="decrement"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAACZUlEQVRYR92YUXLaMBCGd01MX9MbmMENzRs5QegN6A3StxZnpnCChhOEF+hjyAmSG6Q9QfNGoTDxDeLHTgLerhLawUKyZRsTpprJS0bSfvr312oNwo4N3DEe+D+ARqduA0JolBCOCWCfVXaWSvt8RB8JfCC8PBj8uk2bAWOF7trO/u+HUtNC/MxB6oaBgpCocziYDQ3nm6VMKGIRnKcAkePfQkjd2tfZdRJYokI/PbfNk77wRiI1uUZI0D0cTM/iNokFmnjVCwI8yUUhLeaA3w7603e6PbVAS2VEmjY++CJ03vanPdXGSqDxp2oTLLzYRJq0pwnpvcpTa0DiNj087t3kMLCpokGtP30tT14DKjJVcnAuCR/kkrAGNPaqdwDomB4z57w1lSJAk9abOiH9yBkk1XIkPFqt6BGgUcs9s/Cp5mxtMECPy0Dnb8AI0PjUvQKC5tZoOJBcl6JAnivSpXynxMIFwfcssMtHuKFZG/GRBKQ3tEnZ18EmWCEOyL3XFcMCgYDr0T9hdiBl5Nf6s4rS1BPPveF3RpfrLPZJXBNragY6Z6B24i4bnBB77UcfHccq7XGl3uKQHtkXfzrK9rxS6fmB0kPin6NW9YT7ZtF6FD5UN1fdD23lgSW/bC+OVtURCiiBlk296IkKG7quUdvCFnnj5Ju1euoXaPJpaNuLjpwqranlHG2yJRHK2Pa8q4PRekiGem76xYciOhlNZfwFm/ihuAqQod8O2LzdV/Z8GKeKsYd0agjFQsT6c59DrNqTclzciP8wEO+T+LHBLj/6piDGHsqYoszLUqUsc5QUC3cO6A9rq/Ul5bCzHwAAAABJRU5ErkJggg=="/></button>
+            <input class="w-12 sm:w-14 text-xs sm:text-sm md:text-base text-center" value="2" type="number" name="ticket_count" id="quantity" min="1">
+            <button type="button" class="bg-white-500 text-xs sm:text-sm md:text-base px-2 py-1 rounded" id="increment"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAChUlEQVRYR91YXXLaMBDWiuYV1BvAFPJMTlB6A3qD9AQN7wHskHdyg9ATtDeAniB560wgE9+gSl470XbFkI7/ZK/slDLVjF/s1erTt9+uVgZxYAMODI/4PwCtz9VASDMAhPcAQqEQbcs07S5CEBEIjJ5BfjkO9K1vBNgMPQRK/XoWwwbgZwLQZy6kDcLoeKYXTHteyCwjUuLcA0hifdr1LRoIu5f6WxmwUobWY3UGgFNypMqclX1HgWHv4ikosisEtJk2rwXCadlCXt9RrLqzxw+uOU5AO2bmXosxjZF01ZvpqzzzXECbczUUEq9fI0xOjAY+5mkqA8hmkzG4ZAuYQoCA37dpT2WA0mTAJEp3Lx7fpm0zgHxDFRfqetIMQIBNANagkvApXRIygDaT1gN5a7M8klEdQDQ9w1IC0F2g+tLgDReMtasJSBgJJ/GKngDkS/lrAKIad/UufBq9kJAAtJm2vtKWh/tkiNZL1KUEoPtJ68aZXbFsSgA2ctW71Cv77uXQzWROcfYldJRkqEDQnLLvYrZECoWAfrqK4V8EJKge/SHmEEIWEaBOvqjHraVHpd36qJv2xaKeNud08J3tM8sK0/5HoNpHBm2lZo/aDKUO2X9+dDQkdDqB1rkasi/vxupUwrb1YI06DOVlbn4/5HPAVm8/ImLnJM6OZSAXkK24IHHJoqiikatrdLaw9xUyjostnVnxeftv8gEXDZCjdKicok7vskpL4mLKMiNBhi4wTg2lHe6afnsDaXPDkrJj32BLL4pxx779Ns3VJN7wTUMsilhha8jFhmUMpenvbhmWNfvY4qZph5quHyv7s+GIfj5wgbA1VDFElad5hazyKh4TDw7Qb+0KZzTs46DTAAAAAElFTkSuQmCC"/></button>
+            <p class="text-xs sm:text-sm md:text-base">Max 75 tickets per person</p>
+          </div>
+        </div>
+  
+        <div class="space-x-1 mt-2">
+          <h2 class="my-2 text-sm sm:text-base md:text-lg text-gray-600 font-bold">Quick Select</h2>
+          <div class="flex flex-wrap justify-start gap-2">
+            <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="10">10 tickets</a>
+            <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="20">20 tickets</a>
+            <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="30">30 tickets</a>
+            <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="40">40 tickets</a>
+            <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="50">50 tickets</a>
+          </div>
+        </div>
+  
+        <button class="block w-full py-3 px-8 mt-4 rounded-lg bg-orange-500 text-white text-xs sm:text-sm md:text-base font-bold animate-bounce">
+          Add to basket
+        </button>
+      </form>
+    </div>
+  </div>
+      
    <!-- ==================
     navigation
     ================== -->
@@ -288,7 +292,8 @@
         </div>
     </div>
     <script src="{% static 'assets/js/script.js' %}"></script>
-    <!-- <script src="{% static 'assets/js/carousel.js' %}"></script> -->
+    <script src="{% static 'assets/js/indexPayPopUp.js' %}"></script>
+    <script src="{% static 'assets/js/PayPopUp.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const dropdownButton = document.getElementById('dropdownMenuButton');

@@ -115,13 +115,13 @@ deposit
             const head = document.querySelector('#head')
             const submit = document.querySelector('#submit')
             const deposit = document.querySelector('#deposit')
-            const withdraw = document.querySelector('#withdraw')
+            // const withdraw = document.querySelector('#withdraw')
     
-            const withdrawPopUp = function(){
-                walletMenu.classList.replace('hidden', 'fixed')
-                head.innerText = 'withdraw'
-                submit.value = 'withdraw'
-            }
+            // const withdrawPopUp = function(){
+            //     walletMenu.classList.replace('hidden', 'fixed')
+            //     head.innerText = 'withdraw'
+            //     submit.value = 'withdraw'
+            // }
     
             const depositPopUp = function(){
                 walletMenu.classList.replace('hidden', 'fixed')
@@ -134,7 +134,7 @@ deposit
             }
     
             hideWalletMenu.addEventListener('click', hide)
-            withdraw.addEventListener('click', withdrawPopUp)
+            // withdraw.addEventListener('click', withdrawPopUp)
             deposit.addEventListener('click', depositPopUp)
     
     
