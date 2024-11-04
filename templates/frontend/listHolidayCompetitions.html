@@ -136,11 +136,13 @@
                     <td class="hidden md:table-cell">Start</td>
                     <td class="hidden md:table-cell">End</td>
                     <td class="hidden lg:table-cell">Total Staked</td>
+                    
+                    
                     <td class=" md:table-cell text-center">Actions</td>
                 </tr>
             </thead>
             <tbody>
-                {% for competition in competition_list %}
+                {% for competition in page_obj %}
                 <tr class="text-sm">
                     <td class="py-2 font-bold">{{ competition.name }}</td>
                     <td class="p-4">{{ competition.player_count }}</td>
@@ -170,6 +172,21 @@
                 {% endfor %}
             </tbody>
         </table>
+
+                <!-- Pagination controls -->
+        <div class="pagination flex justify-center mt-4">
+          {% if page_obj.has_previous %}
+              <a href="?page=1" class="px-3 py-1 mx-1 bg-gray-200 rounded">&laquo; first</a>
+              <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">previous</a>
+          {% endif %}
+
+          <span class="px-3 py-1 mx-1 bg-gray-300 rounded">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">next</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">last &raquo;</a>
+          {% endif %}
+        </div>
 
         </div>
       </div>

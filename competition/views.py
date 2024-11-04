@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 import datetime
 
-from django.contrib.auth.decorators import login_required
 from .models import *
 from django.conf import settings
 
@@ -27,11 +26,7 @@ import time
 from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib import messages
-
-# import stripe
-# from django.conf import settings
-# from django.shortcuts import render
-# from .models import BasketItem
+from django.core.paginator import Paginator
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -102,18 +97,8 @@ def admin_dashboard(request):
     user_count = User.objects.all().count()
     competition_list = Competition.objects.all()[:3]
     competition_count = Competition.objects.count()
-    holidays = HolidayCompetition.objects.all()
     regular_users_count = User.objects.filter(is_staff=False, is_superuser=False).count()
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
-    # mpesa = MpesaTransaction.objects.all()
-    competitions = CompetitionImage.objects.all()
-    # competitions = Entry.objects.all()
-    # competitions = Ticket.objects.all()
-    # competitions = Winner.objects.all()
-    # competitions = ContactInquiry.objects.all()
-    # competitions = BlogPost.objects.all()
-    # competitions = FAQ.objects.all()
-    # competitions = BasketItem.objects.all()
     context = {
         'competition_count':competition_count,
         'competition_list':competition_list,
@@ -194,12 +179,17 @@ def create_holiday_competition(request):
 
 # List all competitions
 def listCompetitions(request):
-    competition_list = Competition.objects.annotate(player_count=Count('entries'))
+    competition_list = Competition.objects.annotate(player_count=Count('entries')).order_by('id')
     competition_count = competition_list.count()
     user_list = User.objects.all()
     user_count = user_list.count()
     regular_users_count = User.objects.filter(is_staff=False, is_superuser=False).count()
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
+
+    # Pagination logic
+    paginator = Paginator(competition_list, 10)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
         'competition_count': competition_count,
@@ -208,18 +198,24 @@ def listCompetitions(request):
         'user_count': user_count,
         'regular_users_count': regular_users_count,
         'admin_users_count': admin_users_count,
+        'page_obj': page_obj,
     }
 
     return render(request, 'frontend/listCompetitions.html', context)
 
 # List all holiday competitions
 def listHolidayCompetitions(request):
-    competition_list = HolidayCompetition.objects.annotate(player_count=Count('entries'))
+    competition_list = HolidayCompetition.objects.annotate(player_count=Count('entries')).order_by('id')
     competition_count = competition_list.count()
     user_list = User.objects.all()
     user_count = user_list.count()
     regular_users_count = User.objects.filter(is_staff=False, is_superuser=False).count()
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
+
+    # Pagination logic
+    paginator = Paginator(competition_list, 10)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
         'competition_count': competition_count,
@@ -228,22 +224,29 @@ def listHolidayCompetitions(request):
         'user_count': user_count,
         'regular_users_count': regular_users_count,
         'admin_users_count': admin_users_count,
+        'page_obj': page_obj,
     }
 
     return render(request, 'frontend/listHolidayCompetitions.html', context)
 
 # List all users
 def listUser(request):
-    user_list = User.objects.annotate(competition_count=Count('entry'))
+    user_list = User.objects.annotate(competition_count=Count('entry')).order_by('id')
     user_count = user_list.count()
     regular_users_count = User.objects.filter(is_staff=False, is_superuser=False).count()
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
+
+    # Pagination logic
+    paginator = Paginator(user_list, 10)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
         'user_list': user_list,
         'user_count': user_count,
         'regular_users_count': regular_users_count,
         'admin_users_count': admin_users_count,
+        'page_obj': page_obj,
     }
 
     return render(request, 'frontend/listUsers.html', context)
@@ -407,8 +410,8 @@ def delete_images_holi(request, competition_id):
         return JsonResponse({'error': str(e)}, status=500)
     
 def index(request):
-    competitions = Competition.objects.all().order_by('-start_date')[:4]
-    holicompetition = HolidayCompetition.objects.all().order_by('-start_date')[:4]
+    competitions = Competition.objects.filter(index_display=True).order_by('priority')[:4]
+    holicompetition = HolidayCompetition.objects.filter(index_display=True).order_by('priority')[:4]
     context = {
         'competitions': competitions,
         'holicompetition': holicompetition,
@@ -423,18 +426,28 @@ def wallet(request):
     pass
 
 def competitions(request):
-    competitions = Competition.objects.all()
-    return render(request, 'frontend/competitions.html', {'competitions': competitions})
+    competitions = Competition.objects.all().order_by('id')
+
+    # Pagination logic
+    paginator = Paginator(competitions, 12)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'frontend/competitions.html', {'competitions': competitions, 'page_obj':page_obj,})
 
 
 def competition_details(request, competition_id):
     ticket_options = range(2, 21, 2) 
-    competitions = Competition.objects.all()
+    competitions = Competition.objects.all().order_by('id')
     competition = get_object_or_404(Competition, id=competition_id)
     img = CompetitionImage.objects.all()
     images = img.filter(competition=competition)
 
     specs_list = competition.specifications.splitlines()
+
+    paginator = Paginator(competitions, 12)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
    
     context = {
         'competition': competition,
@@ -442,13 +455,19 @@ def competition_details(request, competition_id):
         'ticket_options': ticket_options,
         'competitions': competitions,
         'specs_list': specs_list,
+        'page_obj':page_obj,
         
     }
     return render(request, 'frontend/competition.html', context)
 
 def holidaycompetitions(request):
-    competitions = HolidayCompetition.objects.all()
-    return render(request, 'frontend/Holidaycompetitions.html', {'competitions': competitions})
+    competitions = HolidayCompetition.objects.all().order_by('id')
+
+    paginator = Paginator(competitions, 12)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+   
+    return render(request, 'frontend/Holidaycompetitions.html', {'competitions': competitions,  'page_obj':page_obj,})
 
 
 def holicompetition_details(request, holicompetition_id):
@@ -456,7 +475,11 @@ def holicompetition_details(request, holicompetition_id):
     holiday_competition = get_object_or_404(HolidayCompetition, id=holicompetition_id)
     
     # Fetch all holiday competitions (if needed for related competitions)
-    holiday_competitions = HolidayCompetition.objects.all()
+    holiday_competitions = HolidayCompetition.objects.all().order_by('id')
+
+    paginator = Paginator(holiday_competitions, 12)  # 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     # Fetch associated images for the specific holiday competition
     images = HoliCompetitionImage.objects.filter(competition=holiday_competition)
@@ -469,6 +492,8 @@ def holicompetition_details(request, holicompetition_id):
         'images': images,
         'holiday_competitions': holiday_competitions,
         'specs_list': specs_list,
+        'page_obj':page_obj,
+
     }
     
     return render(request, 'frontend/holidaycompedetails.html', context)
@@ -632,7 +657,6 @@ def add_to_baskety(request, id):
                 basket = request.session.get('basket', [])
                 print("Current session basket data:", basket)
 
-                # Check if the item is already in the session basket
                 # Check if the item is already in the session basket
                 item_found = next((item for item in basket if item.get('holicompetition_id') == holiday_competition.id), None)
 

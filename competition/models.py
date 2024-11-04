@@ -43,6 +43,13 @@ class Competition(models.Model):
     end_date = models.DateTimeField()
     tickets_sold = models.IntegerField(default=0)
 
+    index_display = models.BooleanField(default=False, help_text="Show on index page")
+    priority = models.PositiveSmallIntegerField(
+        choices=[(i, f"Priority {i}") for i in range(1, 5)],
+        unique=True, blank=True, null=True,
+        help_text="Set priority from 1-4 for index page display order"
+    )
+
     def total_ticket_sold(self):
         return self.tickets_sold.count()
 
@@ -62,12 +69,13 @@ class Competition(models.Model):
     
     def days_rem(self):
         if self.end_date:
-            return(self.end_date - self.start_date).days
-        
+            return(self.end_date - self.start_date).days        
 
 
     def __str__(self):
         return self.car_model
+    
+
     
 class CompetitionImage(models.Model):
     competition = models.ForeignKey(Competition, related_name='images', on_delete=models.CASCADE)
@@ -91,6 +99,13 @@ class HolidayCompetition(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     tickets_sold = models.IntegerField(default=0)
+
+    index_display = models.BooleanField(default=False, help_text="Show on index page")
+    priority = models.PositiveSmallIntegerField(
+        choices=[(i, f"Priority {i}") for i in range(1, 5)],
+        unique=True, blank=True, null=True,
+        help_text="Set priority from 1-4 for index page display order"
+    )
 
     def total_ticket_sold(self):
         return self.tickets_sold.count()

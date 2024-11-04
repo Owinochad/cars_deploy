@@ -9,7 +9,7 @@
 
     <div class="transition-all duration-500 ease-in-out mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4" id="carousel">
         {% if competitions %}
-            {% for competition in competitions %}
+            {% for competition in page_obj %}
                 <div class="rounded-lg border overflow-hidden mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
                     <a href="{% url 'holicompetition' competition.id %}" class="block no-underline hover:no-underline">
                         <img class="object-cover h-96 w-full rounded-t-lg" src="{{ competition.image.url }}" alt="{{ competition.name }}">
@@ -21,12 +21,7 @@
                                 <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
                             </div>
                             <p class="py-2 text-gray-700 font-bold">Win this {{ competition.name }} holiday and experience comfort</p>
-                            <div class="flex items-center text-xs p-2 bg-orange-200 w-max rounded-md">
-                                <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                </svg>
-                                <p class="text-orange-600 ml-1">1 day</p>                  
-                            </div>
+                            
                         </div>
                     </a>
                     <div class="flex justify-between items-center px-4 pb-4 -mt-2 text-orange-500">
@@ -41,6 +36,23 @@
             <p>No competitions available at the moment. Check back soon!</p>
         {% endif %}
     </div>
+
+    </div>
+    <!-- Pagination controls -->
+    <div class="pagination flex justify-center mt-4">
+    {% if page_obj.has_previous %}
+        <a href="?page=1" class="px-3 py-1 mx-1 bg-gray-200 rounded">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">previous</a>
+    {% endif %}
+
+    <span class="px-3 py-1 mx-1 bg-gray-300 rounded">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">last &raquo;</a>
+    {% endif %}
+    </div>
+
 </div><br>
 
 

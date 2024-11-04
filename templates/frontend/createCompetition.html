@@ -119,8 +119,7 @@
                             {% for error in competition_form.specifications.errors %}
                                 <span class="text-red-500">{{ error }}</span>
                             {% endfor %}
-                        </div>
-                        
+                        </div>                        
                         
                     </div>
                     <div class="md:flex gap-2 mt-4">
@@ -185,7 +184,25 @@
                             {% endfor %}
                         </div>
 
-                    </div>                  
+                    </div>  <br> 
+
+                    <div class="md:flex gap-2 mt-4">                    
+                    <div class="md:w-1/2  gap-1 ">
+                        <label for="specifications">Index_display</label>
+                        {{ competition_form.index_display|add_class:"border border-gray-300 rounded-md p-2 focus:border-blue-500 focus:ring focus:ring-blue-200" }}  <!-- Render specifications field -->
+                        {% for error in competition_form.index_diaplay.errors %}
+                            <span class="text-red-500">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="md:w-1/2 gap-1 ">
+                        <label for="specifications">Priority</label>
+                        {{ competition_form.priority|add_class:"border border-gray-300 rounded-md p-2 focus:border-blue-500 focus:ring focus:ring-blue-200" }}  <!-- Render specifications field -->
+                        {% for error in competition_form.priority.errors %}
+                            <span class="text-red-500">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    </div> <br>
                     
 
                     <button type="submit" class="w-full p-2 border border-black hover:bg-black hover:text-gray-100 transition duration-500 rounded mt-4">Create Competition</button>

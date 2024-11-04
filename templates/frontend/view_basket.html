@@ -146,7 +146,7 @@
                                     </div>
                                     <p class="text-gray-800 text-xs">50% sold</p>
                                 </div>
-                                <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_brand }} Tax free</p>
+                                <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_make }} Tax free</p>
                                 <div class="flex items-center text-xs p-1 bg-orange-200 w-max">
                                     <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -192,17 +192,11 @@
                         <div class="p-4">
                             <div class="flex justify-between">
                                 <div class="h-2 w-4/5 rounded-full bg-gray-200 mt-2">
-                                    <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 "></div>
+                                    <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 "></div>
                                 </div>
-                                <p class="text-gray-800 text-xs">50% sold</p>
+                                <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }} % sold</p>
                             </div>
-                            <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_brand }} Tax free</p>
-                            <div class="flex items-center text-xs p-1 bg-orange-200 w-max">
-                                <svg class="size-3 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                </svg>
-                                <p class="text-orange-600">1 day</p> 
-                            </div>
+                            <p class="py-2 text-gray-700 font-bold">Win this {{ competition.car_make }} Now</p>
                             <div class="flex justify-between items-center mt-2 text-orange-500">
                                 <p class="text-xm">Tickets at ksh {{ competition.ticket_price }}</p>                  
                             </div>

@@ -18,6 +18,8 @@ class CompetitionForm(forms.ModelForm):
             'total_tickets', 
             'start_date', 
             'end_date', 
+            'index_display',
+            'priority',
         ]
 
         start_date  = forms.DateTimeField(
@@ -60,6 +62,8 @@ class HolidayCompetitionForm(forms.ModelForm):
             'start_date', 
             'tickets_sold',
             'end_date',
+            'index_display',
+            'priority',
         ]
 
     start_date = forms.DateTimeField(

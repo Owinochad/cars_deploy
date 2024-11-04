@@ -197,7 +197,19 @@ Pop up
     <!-- Mobile menu -->
     <div id="mobileMenu" class="hidden lg:hidden transition-all duration-300 ease-in-out transform">
         <div class="flex flex-col items-center p-4 space-y-4 bg-white shadow-lg">
-            <a href="{% url 'competitions' %}" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Competitions</a>
+            <!-- Competitions Dropdown Trigger -->
+        <div>
+            <button id="competitionsDropdownButton" class="block  hover:text-orange-500 transition-colors duration-300 ease-in-out ">
+                Competitions
+            </button>
+
+            <!-- Dropdown Content for Competitions -->
+            <div id="competitionsDropdown" class="hidden mt-2 flex flex-col items-start space-y-2 bg-white shadow-md rounded-lg p-3">
+                <a href="{% url 'competitions' %}" class="block  hover:text-orange-500 transition-colors duration-300 ease-in-out">Car Competitions</a>
+                <a href="{% url 'holicompetitions' %}" class="block  hover:text-orange-500 transition-colors duration-300 ease-in-out">Holiday Competitions</a>
+            </div>
+        </div>
+
             <a href="#" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Winners</a>
             {% if request.user.is_authenticated %}
             <a href="{% url 'account_logout' %}" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Logout</a>
@@ -294,6 +306,15 @@ Pop up
     <script src="{% static 'assets/js/script.js' %}"></script>
     <script src="{% static 'assets/js/indexPayPopUp.js' %}"></script>
     <script src="{% static 'assets/js/PayPopUp.js' %}"></script>
+
+    <script>
+        const competitionsDropdownButton = document.getElementById('competitionsDropdownButton');
+        const competitionsDropdown = document.getElementById('competitionsDropdown');
+    
+        competitionsDropdownButton.addEventListener('click', () => {
+            competitionsDropdown.classList.toggle('hidden');  // Show or hide the dropdown
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const dropdownButton = document.getElementById('dropdownMenuButton');
