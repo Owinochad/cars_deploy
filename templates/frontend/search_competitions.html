@@ -1,0 +1,81 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %} <br>
+
+<div class="flex justify-between items-center">
+
+    <h2 class="font-bold pl-10 uppercase">Find it  ...</h2>
+
+    <form action="{% url 'search_competitions' %}" method="POST" class="w-full sm:w-1/2 md:w-1/3 pr-10 :w-1/4">
+                
+        {% csrf_token %}
+
+        <div class="relative">
+            <input 
+                type="search"   
+                name="searched"                   
+                placeholder="Search competitions..." 
+                class="w-full px-4 pr-10 py-2 p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 ease-in-out"
+            
+            />
+            <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                <svg 
+                    class=" h-5 w-5 text-gray-400" 
+                    fill="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path d="M21.707 20.293l-5.32-5.32A7.92 7.92 0 0 0 18 10a8 8 0 1 0-8 8c1.658 0 3.195-.507 4.473-1.435l5.32 5.32a1 1 0 0 0 1.414-1.414zM10 16a6 6 0 1 1 6-6 6.006 6.006 0 0 1-6 6z"/>
+                </svg>
+            </button>
+        </div>
+    </form>
+</div> <br>
+
+<div class="container mx-auto">
+    <div class="p-4 md:p-10 lg:p-20 bg-white text-gray-500">
+        <h1 class="text-center text-4xl font-bold my-8">Search Results for: <strong>{{ searched }}</strong></h1>
+
+        <!-- Car Competitions Section -->
+        <h2 class="text-3xl font-semibold mb-4">Car Competitions</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {% if competitions %}
+                {% for competition in competitions %}
+                <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline transition-transform transform hover:scale-105 hover:shadow-md hover:bg-green-200 ease-in-out">
+                    <div class="flex flex-col justify-between items-center gap-4 p-4 rounded border shadow-lg">
+                        <h3 class="text-xl font-bold">{{ competition.car_model }}</h3>
+                        <img class="w-full h-auto mb-4 md:w-80 " src="{{ competition.image.url }}" alt="{{ competition.car_model }}"> <!-- Adjusted image size -->
+                        <p class="text-sm text-gray-600">Win This {{ competition.car_make }} Now !</p>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-gray-500 col-span-5">No car competitions found.</p>
+            {% endif %}
+        </div>
+
+        <br>
+
+        <!-- Holiday Competitions Section -->
+        <h2 class="text-3xl font-semibold mb-4">Holiday Competitions</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 ">
+            {% if holiday_competitions %}
+                {% for holiday in holiday_competitions %}
+                <a href="{% url 'holicompetition' holiday.id %}" class="block no-underline hover:no-underline transition-transform transform hover:scale-105 hover:shadow-md hover:bg-green-200 ease-in-out">
+                    <div class="flex flex-col justify-between items-center gap-4 p-4 rounded border shadow-lg">
+                        <h3 class="text-xl font-bold">{{ holiday.name }}</h3>
+                        <img class="w-full h-auto mb-4 md:w-80 " src="{{ holiday.image.url }}" alt="{{ holiday.name }}"> <!-- Adjusted image size -->
+                        <p class="text-sm text-gray-600">Win a trip to {{ holiday.name }} Now !</p>
+
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-gray-500 col-span-5">No holiday competitions found.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+<br>{% endblock %}

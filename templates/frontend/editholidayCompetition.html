@@ -165,11 +165,26 @@
                         </div>
                     </div>
 
-                </div>
+                </div> <br>
+
+                <div class="md:flex gap-2 mt-4">                    
+                    <div class="md:w-1/2  gap-1 ">
+                        <label for="{{ form.index_diaplay.id_for_label }}">Index Display:</label>
+                    {{ form.index_display }} 
+                        </div>
+
+                    <div class="md:w-1/2 gap-1 ">
+                        <label for="{{ form.priority.id_for_label }}">Priority:</label>
+                    {{ form.priority }}
+                    </div>
+                    </div> <br>
+
+                    <button class="w-full bg-green-500 p-2 rounded text-green-100 mt-4 hover:bg-green-400 transition">Confirm Edit</button>
                     
                 </div>
+                
 
-                <button class="w-full bg-green-500 p-2 rounded text-green-100 mt-4 hover:bg-green-400 transition">Confirm Edit</button>
+               
                 </form>
             </div>
         </div>

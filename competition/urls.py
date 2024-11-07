@@ -43,6 +43,7 @@ urlpatterns = [
     path('ticket/', views.create_ticket, name='ticket'),
     path('delete-images-holiday/<int:competition_id>/', views.delete_images_holi, name='delete_images_holiday'),
     path('delete-images-competition/<int:competition_id>/', views.delete_images_compe, name='delete_images_competition'),
+    path('search_competitions/', views.search_competitions, name='search_competitions'),
 
 
       ]

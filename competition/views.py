@@ -598,6 +598,9 @@ def add_to_basket(request, id):
                     basket_item.ticket_count += ticket_count
                     basket_item.save()
                     print('3rd if')
+
+                return redirect('view_basket')
+                    
             else:
                 # Unauthenticated users
                 basket = request.session.get('basket', [])
@@ -616,6 +619,7 @@ def add_to_basket(request, id):
                         'ticket_count': ticket_count,
                     })
                 request.session['basket'] = basket
+                return redirect('view_basket')
             
         return redirect('competition', competition_id=competition.id)
 
@@ -641,17 +645,13 @@ def add_to_baskety(request, id):
                     defaults={'ticket_count': ticket_count}
                 )
 
-                print('Basket item checked for authenticated user')
-                print(f"Basket item: {basket_item}, Created: {created}")
-
                 if not created:
                     # If the item already exists, update the ticket count
                     print(f"Before update, ticket count: {basket_item.ticket_count}")
                     basket_item.ticket_count += ticket_count
                     basket_item.save()
-                    print(f"Updated ticket count for existing basket item: {basket_item.ticket_count}")
-                else:
-                    print(f"New basket item created with ticket count: {basket_item.ticket_count}")
+                return redirect('view_basket')
+                    
             else:
                 # For unauthenticated users, handle session-based basket
                 basket = request.session.get('basket', [])
@@ -672,7 +672,8 @@ def add_to_baskety(request, id):
                         'ticket_count': ticket_count,
                     })
                 request.session['basket'] = basket
-                print('Session basket updated with new item')
+                return redirect('view_basket')
+                
 
         else:
             print(f"Invalid ticket count: {ticket_count}")
@@ -1066,4 +1067,30 @@ def cookie_policy(request):
     
 def how_it_works(request):
     return render(request, 'frontend/how_it_works.html', context={})
+
+def search_competitions(request):
+
+    if request.method == 'POST':
+        searched = request.POST.get('searched', 'Search term not found')
+
+        # Filter both Competition and HolidayCompetition based on the search term
+        competitions = Competition.objects.filter(car_make__icontains=searched)
+        holiday_competitions = HolidayCompetition.objects.filter(name__icontains=searched)
+
+        context = {
+            'searched': searched,
+            'competitions': competitions,
+            'holiday_competitions': holiday_competitions,
+        }
+
+        return render(request, 'frontend/search_competitions.html', context)
+    else:
+        context = {
+             'searched': '',
+
+        }
+    
+        return render(request, 'frontend/search_competitions.html', context)
+
+    
 
