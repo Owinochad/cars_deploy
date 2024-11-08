@@ -94,7 +94,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'allauth.socialaccount.providers.github',
-    # 'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.twitter',
     # 'allauth.socialaccount.providers.twitter_oauth2',
     # 'allauth.socialaccount.providers.telegram',
     # 'allauth.socialaccount.providers.facebook',
@@ -151,6 +151,14 @@ SOCIALACCOUNT_PROVIDERS = {
             'key': ''
         }
     },
+
+    # 'twitter': {
+    #     'APP': {
+    #         'client_id': config('SOCIAL_AUTH_TWITTER_CLIENT_ID'),
+    #         'secret': config('SOCIAL_AUTH_TWITTER_SECRET'), 
+    #         'key': ''
+    #     }
+    # },
 }
 
 

@@ -178,16 +178,22 @@ Pop up
               {% endfor %}
 
         {% endif %}
-                  <div class=" col-span-2 w-full "> 
-                    <a href="{% url 'competition' 19 %}">
-                    <video autoplay muted loop class=" p-2 object-cover w-full h-full ">
-                      <source src="{% static 'assets/videos/GLC 63s AMG.mp4' %}" type="video/mp4">
-                    </video>
-                  </a>
-                  </div>
+                  <div class=" col-span-2 w-full  relative group"> 
+                      <a href="{% url 'competition' 19 %}">
+                      <video autoplay muted loop class=" p-2 object-cover w-full h-full ">
+                        <source src="{% static 'assets/videos/GLC 63s AMG.mp4' %}" type="video/mp4">
+                      </video>
+
+                        <!-- Overlay content on hover -->
+                      <div class="absolute bottom-2 left-2 w-80 h-30 bg-black/50 text-white hidden group-hover:flex flex-col justify-center items-center text-center p-4">
+                        <h2 class="text-2xl font-bold">Click me and win this GLC 63s AMG now</h2>
+                        <p class="text-lg mt-2">Tickets at Ksh {{ competitions.ticket_price }}</p>
+                      </div>
+
+                        </a>
+                        </div>  
   
-  
-              </div> <br>
+                  </div> <br>
           </div>
           <div class="flex justify-center mt-4">
             <button class="bg-orange-500 text-3xl px-6 py-3 text-gray-200 hover:bg-orange-700 transition duration-300 ease-in-out animate-bounce rounded-lg">
@@ -256,15 +262,19 @@ Pop up
             </div>
           {% endfor %}
 
-          <div class=" col-span-2 w-full"> 
+          <div class="col-span-2 w-full relative group">
             <a href="{% url 'holicompetition' 9 %}">
-            <video autoplay muted loop class="object-cover w-full h-full p-2 ">
-              <source src="{% static 'assets/videos/holiday vid.mp4' %}" type="video/mp4">
-            </video>
-          </div>
-          </a>
-
-          </div> <br>
+                <video autoplay muted loop class="object-cover w-full h-full p-2">
+                    <source src="{% static 'assets/videos/holiday vid.mp4' %}" type="video/mp4">
+                </video>
+                
+                <!-- Overlay content on hover -->
+                <div class="absolute bottom-0 left-0 w-full h-1/2 bg-black/50 text-white hidden group-hover:flex flex-col justify-center items-center text-center p-4">
+                    <h2 class="text-2xl font-bold">Click me and win a trip to {{ holicompetition.name }} now</h2>
+                    <p class="text-lg mt-2">Tickets at Ksh {{ holicompetition.ticket_price }}</p>
+                </div>
+            </a>
+        </div> <br>
           
       </div>
 
