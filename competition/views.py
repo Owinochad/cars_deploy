@@ -187,9 +187,9 @@ def listCompetitions(request):
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
 
     # Pagination logic
-    paginator = Paginator(competition_list, 10)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(competition_list, 5)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
 
     context = {
         'competition_count': competition_count,
@@ -198,7 +198,7 @@ def listCompetitions(request):
         'user_count': user_count,
         'regular_users_count': regular_users_count,
         'admin_users_count': admin_users_count,
-        'page_obj': page_obj,
+        # 'page_obj': page_obj,
     }
 
     return render(request, 'frontend/listCompetitions.html', context)
@@ -213,9 +213,9 @@ def listHolidayCompetitions(request):
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
 
     # Pagination logic
-    paginator = Paginator(competition_list, 10)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(competition_list, 10)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
 
     context = {
         'competition_count': competition_count,
@@ -224,7 +224,7 @@ def listHolidayCompetitions(request):
         'user_count': user_count,
         'regular_users_count': regular_users_count,
         'admin_users_count': admin_users_count,
-        'page_obj': page_obj,
+        # 'page_obj': page_obj,
     }
 
     return render(request, 'frontend/listHolidayCompetitions.html', context)
@@ -237,16 +237,16 @@ def listUser(request):
     admin_users_count = User.objects.filter(is_staff=True, is_superuser=True).count()
 
     # Pagination logic
-    paginator = Paginator(user_list, 10)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(user_list, 10)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
 
     context = {
         'user_list': user_list,
         'user_count': user_count,
         'regular_users_count': regular_users_count,
         'admin_users_count': admin_users_count,
-        'page_obj': page_obj,
+        # 'page_obj': page_obj,
     }
 
     return render(request, 'frontend/listUsers.html', context)
@@ -429,11 +429,15 @@ def competitions(request):
     competitions = Competition.objects.all().order_by('id')
 
     # Pagination logic
-    paginator = Paginator(competitions, 12)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(competitions, 12)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+
+    context = {'competitions': competitions,
+                # 'page_obj':page_obj,
+                }
     
-    return render(request, 'frontend/competitions.html', {'competitions': competitions, 'page_obj':page_obj,})
+    return render(request, 'frontend/competitions.html', context)
 
 
 def competition_details(request, competition_id):
@@ -445,9 +449,9 @@ def competition_details(request, competition_id):
 
     specs_list = competition.specifications.splitlines()
 
-    paginator = Paginator(competitions, 12)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(competitions, 12)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
    
     context = {
         'competition': competition,
@@ -455,7 +459,7 @@ def competition_details(request, competition_id):
         'ticket_options': ticket_options,
         'competitions': competitions,
         'specs_list': specs_list,
-        'page_obj':page_obj,
+        # 'page_obj':page_obj,
         
     }
     return render(request, 'frontend/competition.html', context)
@@ -463,11 +467,16 @@ def competition_details(request, competition_id):
 def holidaycompetitions(request):
     competitions = HolidayCompetition.objects.all().order_by('id')
 
-    paginator = Paginator(competitions, 12)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(competitions, 12)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+
+    context = {
+        'competitions': competitions,
+        #   'page_obj':page_obj,
+          }
    
-    return render(request, 'frontend/Holidaycompetitions.html', {'competitions': competitions,  'page_obj':page_obj,})
+    return render(request, 'frontend/Holidaycompetitions.html', context )
 
 
 def holicompetition_details(request, holicompetition_id):
@@ -477,9 +486,9 @@ def holicompetition_details(request, holicompetition_id):
     # Fetch all holiday competitions (if needed for related competitions)
     holiday_competitions = HolidayCompetition.objects.all().order_by('id')
 
-    paginator = Paginator(holiday_competitions, 12)  # 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(holiday_competitions, 12)  # 10 items per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
     
     # Fetch associated images for the specific holiday competition
     images = HoliCompetitionImage.objects.filter(competition=holiday_competition)
@@ -492,7 +501,7 @@ def holicompetition_details(request, holicompetition_id):
         'images': images,
         'holiday_competitions': holiday_competitions,
         'specs_list': specs_list,
-        'page_obj':page_obj,
+        # 'page_obj':page_obj,
 
     }
     

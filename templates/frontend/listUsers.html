@@ -136,7 +136,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for user in page_obj %}              
+              {% for user in user_list %}              
                 <tr class="text-sm">
                   <td class="py-2 font-bold">{{user.username}}</td>
                   <td>{{ user.competition_count }}</td>
@@ -155,7 +155,7 @@
           </table>
 
                  <!-- Pagination controls -->
-        <div class="pagination flex justify-center mt-4">
+        <!-- <div class="pagination flex justify-center mt-4">
           {% if page_obj.has_previous %}
               <a href="?page=1" class="px-3 py-1 mx-1 bg-gray-200 rounded">&laquo; first</a>
               <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">previous</a>
@@ -167,7 +167,7 @@
               <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">next</a>
               <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">last &raquo;</a>
           {% endif %}
-        </div>
+        </div> -->
         
         </div>
       </div>

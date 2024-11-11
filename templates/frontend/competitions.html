@@ -8,25 +8,21 @@
 
  <div class="pt-3 px-2 md:px-10 lg:px-20 transition-all duration-500">
 
-    <div class="flex justify-between items-center">
-        
-        <h1 class="font-bold text-gray-800 mb-2 mt-2 ml-4">Enter now, grab tickets, and win your dream car in the LIVE draw!</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+        <h1 class="font-bold text-gray-800 text-center sm:text-left mb-2 mt-2">Enter now, grab tickets, and win your dream car in the LIVE draw!</h1>
 
         <form action="{% url 'search_competitions' %}" method="POST" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-
             {% csrf_token %}
-
             <div class="relative">
                 <input 
                     type="search" 
                     name="searched"                     
                     placeholder="Search competitions..." 
-                    class="w-full px-4 pr-10 py-2 p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 ease-in-out"
-                
+                    class="w-full px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 ease-in-out"
                 />
                 <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2">
                     <svg 
-                        class=" h-5 w-5 text-gray-400" 
+                        class="h-5 w-5 text-gray-400" 
                         fill="currentColor" 
                         viewBox="0 0 24 24"
                     >
@@ -36,12 +32,12 @@
             </div>
         </form>
     </div>
-
+    
     <div class=" transition-all duration-500 ease-in-out mx-auto grid grid-cols-1 p-2 sm:grid-cols-2 md:grid-cols-2  md:gap-2 lg:grid-cols-3 lg:gap-4 transition-all duration-500" id="carousel">
         <!-- car card -->
 
             {% if competitions %}
-            {% for competition in page_obj %}
+            {% for competition in competitions %}
                   <div class=" rounded-lg border overflow-hidden  mt-4 bg-white w-full md:w-96 lg:w-auto  flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
                     <!-- Wrap the competition details in the anchor tag -->
                     <a href="{% url 'competition' competition.id %}" class="block no-underline hover:no-underline">
@@ -70,7 +66,7 @@
             {% endif %} 
         </div>
              <!-- Pagination controls -->
-             <div class="pagination flex justify-center mt-4">
+             <!-- <div class="pagination flex justify-center mt-4">
                 {% if page_obj.has_previous %}
                     <a href="?page=1" class="px-3 py-1 mx-1 bg-gray-200 rounded">&laquo; first</a>
                     <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">previous</a>
@@ -83,7 +79,7 @@
                     <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">last &raquo;</a>
                 {% endif %}
               </div>
-              
+               -->
 
 
 </div><br>
