@@ -106,7 +106,7 @@ Pop up
         <h2 class="flex items-center space-x-2 lg:space-x-4">
                    
             <!-- Text -->
-            <a href="{% url 'index' %}" class="text-xl lg:text-3xl font-bold tracking-wide hover:text-orange-500 transition-colors duration-300 ease-in-out">
+            <a href="{% url 'index' %}" class="text-xl lg:text-3xl font-bold tracking-wide hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out">
                 MyDreamCar
             </a>
 
@@ -118,7 +118,7 @@ Pop up
         <!-- Menu toggle for mobile -->
         <div class="block flex gap-2 item-center lg:hidden">
             {% if user.is_authenticated %}
-            <a href="{% url 'user-profile' %}" class="text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
+            <a href="{% url 'user-profile' %}" class=" text-black hover:text-orange-500 focus:outline-none transition-transform duration-300 ease-in-out transform hover:scale-110">
                 <img class="size-6 rounded-full bg-slate-900 object-center" src="{{ user.userprofile.image.url }}" alt="Profile Image">                 
             </a>
             {% else %}
@@ -143,16 +143,16 @@ Pop up
         <!-- Navigation links -->
         <div id="navLinks" class="hidden lg:flex p-2 space-x-8 text-md font-bold uppercase items-center">
             {% if request.user.is_authenticated %}
-            <p>Welcome, {{user.username}}</p>
+            <p class="md:hidden">Welcome, {{user.username}}</p>
                 {% if request.user.is_staff and request.user.is_superuser %}
-                <a href="{% url 'admin_dashboard' %}" class="inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline" > Admin Panel</a>
+                <a href="{% url 'admin_dashboard' %}" class="inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline" > Admin Panel</a>
                 {% endif %}
             {% endif %}
             
 
             <div class="relative inline-block text-left">
                 <!-- Button to trigger the dropdown -->
-                <button class="inline-flex items-center hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline focus:outline-none font-bold uppercase" id="dropdownMenuButton">
+                <button class="inline-flex items-center hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline focus:outline-none font-bold uppercase" id="dropdownMenuButton">
                     Competitions
                     <!-- Dropdown icon -->
                     <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -163,29 +163,29 @@ Pop up
                 <!-- Dropdown menu -->
                 <div class="hidden absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:underline focus:outline-none" id="dropdownMenu">
                     <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="dropdownMenuButton">
-                        <a href="{% url 'competitions' %}" class="block px-4 py-2 text-sm text-orange-700 hover:bg-orange-100" role="menuitem">Car Competitions</a>
-                        <a href="{% url 'holicompetitions' %}" class="block px-4 py-2 text-sm text-orange-700 hover:bg-orange-100" role="menuitem">Holiday Competitions</a>
+                        <a href="{% url 'competitions' %}" class="block py-2 px-2 text-sm text-black hover:bg-orange-500 hover:text-white rounded-md" role="menuitem">Car Competitions</a>
+                        <a href="{% url 'holicompetitions' %}" class="block py-2 px-2 text-sm text-black hover:bg-orange-500 hover:text-white rounded-md" role="menuitem">Holiday Competitions</a>
                     </div>
                 </div>
             </div>
 
-            <a href="#" class="inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline">Winners</a>
+            <a href="#" class="inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline">Winners</a>
 
             {% if request.user.is_authenticated %}
             
-            <a href="{% url 'account_logout' %}" class="inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline">Logout</a>
-            <a href="{% url 'user-profile' %}" class=" text-orange-500 inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline animate-bounce">Profile</a>
+            <a href="{% url 'account_logout' %}" class="inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline">Logout</a>
+            <a href="{% url 'user-profile' %}" class=" text-orange-500 inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline animate-bounce">Profile</a>
     
-            <!-- <a href="{% url 'account_signup' %}" class=" text-orange-500 inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline animate-bounce">Signup</a> -->
+            <!-- <a href="{% url 'account_signup' %}" class=" text-orange-500 inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline animate-bounce">Signup</a> -->
             
             {% else %}
-            <a href="{% url 'account_login' %}" class="inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline">Login</a>
-            <a href="{% url 'account_signup' %}" class=" text-orange-500 inline-block hover:text-orange-500 transition-colors duration-300 ease-in-out hover:underline animate-bounce">Signup</a>
+            <a href="{% url 'account_login' %}" class="inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline">Login</a>
+            <a href="{% url 'account_signup' %}" class=" text-orange-500 inline-block hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline animate-bounce">Signup</a>
             {% endif %}
             
             
             <!-- Basket Icon -->
-            <a  href="{% url 'view_basket' %}" class="inline-block mt-1 relative hover:text-orange-500 transition-transform duration-300 ease-in-out transform hover:scale-110">
+            <a  href="{% url 'view_basket' %}" class="inline-block mt-1 relative hover:bg-orange-500 hover:text-white py-2 px-2 rounded-md transition-transform duration-300 ease-in-out transform hover:scale-110">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                 </svg>
@@ -199,27 +199,29 @@ Pop up
         <div class="flex flex-col items-center p-4 space-y-4 bg-white shadow-lg">
             <!-- Competitions Dropdown Trigger -->
         <div>
-            <button id="competitionsDropdownButton" class="block  hover:text-orange-500 transition-colors duration-300 ease-in-out ">
+            <button id="competitionsDropdownButton" class="block  transition-colors inline-flex items-center bg-orange-500 text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out hover:underline focus:outline-none">
                 Competitions
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
             </button>
 
             <!-- Dropdown Content for Competitions -->
             <div id="competitionsDropdown" class="hidden mt-2 flex flex-col items-start space-y-2 bg-white shadow-md rounded-lg p-3">
-                <a href="{% url 'competitions' %}" class="block  hover:text-orange-500 transition-colors duration-300 ease-in-out">Car Competitions</a>
-                <a href="{% url 'holicompetitions' %}" class="block  hover:text-orange-500 transition-colors duration-300 ease-in-out">Holiday Competitions</a>
+                <a href="{% url 'competitions' %}" class="block  bg-orange-500 text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out">Car Competitions</a>
+                <a href="{% url 'holicompetitions' %}" class="block  bg-orange-500 text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out">Holiday Competitions</a>
             </div>
         </div>
 
-            <a href="#" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Winners</a>
+            <a href="#" class="block bg-orange-500 text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out">Winners</a>
             {% if request.user.is_authenticated %}
-            <a href="{% url 'account_logout' %}" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Logout</a>
-            <a href="{% url 'user-profile' %}" class=" text-orange-500 block hover:text-orange-500 transition-colors duration-300 ease-in-out animate-bounce">Profile</a>          
+            <a href="{% url 'account_logout' %}" class="block bg-orange-500 text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out">Logout</a>
+            <a href="{% url 'user-profile' %}" class="block bg-black text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out animate-bounce">Profile</a>          
             {% else %}
-            <a href="{% url 'account_login' %}" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Login</a>
-            <a href="{% url 'account_signup' %}" class=" text-orange-500 block hover:text-orange-500 transition-colors duration-300 ease-in-out animate-bounce">Signup</a> 
+            <a href="{% url 'account_login' %}" class="block bg-orange-500 text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out">Login</a>
+            <a href="{% url 'account_signup' %}" class="block bg-black text-white py-2 px-2 rounded-md transition-colors duration-300 ease-in-out animate-bounce">Signup</a> 
             {% endif %}
-
-            <a href="{% url 'view_basket' %}" class="block hover:text-orange-500 transition-colors duration-300 ease-in-out">Basket</a>
+            
         </div>
     </div>
 
