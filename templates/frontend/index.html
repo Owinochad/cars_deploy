@@ -228,6 +228,70 @@ Pop up
   </div>
 </div>
 
+
+<!-- ============================
+    Just Launched Electronics
+============================ -->
+<div class="bg-gray-100 p-4 text-sm md:px-10 lg:px-20 transition-all duration-500">
+  <div class="flex justify-between items-center">
+    <!-- Left Side: Title -->
+    <h2 class="font-bold uppercase">Electronic Competitions</h2>
+  </div>
+
+  <!-- Holiday List -->
+  <div class="relative overflow-hidden scrollbar-hide">
+    <div class="absolute top-1/4 left-0 right-0 z-10 flex justify-between sm:hidden"></div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-all duration-500 ease-in-out">
+      {% for competition in electronics %}
+        <div class="rounded-lg border overflow-hidden mt-4 bg-white w-full md:w-96 lg:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
+          <a href="{% url 'electronics' competition.id %}" class="block no-underline hover:no-underline">
+            <img src="{{ competition.image.url }}" alt="{{ competition.name }}" class="w-full rounded-t-lg">
+            <div class="p-4">
+              <div class="flex justify-between mb-2">
+                <div class="h-2 w-4/5 rounded-full bg-gray-200">
+                  <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                </div>
+                <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
+              </div>
+              <p class="py-2 text-gray-700 font-bold">Win This {{ competition.name }} holiday trip NOW!</p>
+            </div>
+          </a>
+          <div class="flex justify-between items-center px-4 pb-4 -mt-2 text-orange-500">
+            <p class="text-xl">Tickets at Ksh {{ competition.ticket_price }}</p>
+            <svg 
+                  id="{{ competition.id }}"  
+                  class=" show-pop-up size-10 fill-orange-500 text-white cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                  data-competition-id="{{ competition.id }}" data-car-brand="{{ competition.name }}" data-car-model="{{ competition.name }}" data-ticket-price="{{ competition.ticket_price }}" data-form-url="{% url 'add_to_basket' competition.id %}" data-image-url="{{ competition.image.url }}">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- Holiday Video Section -->
+      <div class="col-span-1 sm:col-span-1 md:col-span-2 w-full relative group"> 
+        <a href="{% url 'holicompetition' 1 %}">
+          <video autoplay muted loop class="p-2 object-cover w-full h-full max-h-96 lg:max-h-full">
+            <source src="{% static 'assets/videos/holiday vid.mp4' %}" type="video/mp4">
+          </video>
+          <div class="absolute inset-0 bg-black/40 text-white flex flex-col justify-center items-center text-center m-2 p-4 sm:p-6 lg:p-8 xl:p-10 
+                lg:hidden group-hover:flex">
+            <h2 class="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold">Click me and win a Magic Holiday In Zanzibar & Dar Es Salaam now</h2>
+            <p class="text-base md:text-lg lg:text-xl mt-2">Tickets at Ksh 1000.00</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="flex justify-center mt-4">
+      <button class="bg-orange-500 text-3xl px-6 py-3 text-gray-200 hover:bg-orange-700 transition duration-300 ease-in-out animate-bounce rounded-lg">
+        <a href="{% url 'electronics_competitions' %}">View More</a>
+      </button>
+    </div>
+  </div>
+</div>
+
       
 
       <!-- =================================================================

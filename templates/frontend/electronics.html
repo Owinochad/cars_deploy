@@ -1,0 +1,60 @@
+{% extends 'frontend/base.html' %}
+{% block content %}
+<!-- Competition Section -->
+<div class="pt-3 px-2 md:px-10 lg:px-20 transition-all duration-500">
+    <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+        <h1 class="font-bold text-gray-800 text-center sm:text-left mb-2 mt-2">Find the latest electronics competitions and win amazing prizes!</h1>
+
+        <form action="{% url 'search_competitions' %}" method="POST" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+            {% csrf_token %}
+            <div class="relative">
+                <input 
+                    type="search" 
+                    name="searched"                     
+                    placeholder="Search competitions..." 
+                    class="w-full px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 ease-in-out"
+                />
+                <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                    <svg 
+                        class="h-5 w-5 text-gray-400" 
+                        fill="currentColor" 
+                        viewBox="0 0 24 24"
+                    >
+                        <path d="M21.707 20.293l-5.32-5.32A7.92 7.92 0 0 0 18 10a8 8 0 1 0-8 8c1.658 0 3.195-.507 4.473-1.435l5.32 5.32a1 1 0 0 0 1.414-1.414zM10 16a6 6 0 1 1 6-6 6.006 6.006 0 0 1-6 6z"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="transition-all p-2 duration-500 ease-in-out mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4" id="carousel">
+        {% if competitions %}
+            {% for competition in competitions %}
+                <div class="rounded-lg border overflow-hidden mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
+                    <a href="{% url 'electronics' competition.id %}" class="block no-underline hover:no-underline">
+                        <img class="object-cover h-96 w-full rounded-t-lg" src="{{ competition.image.url }}" alt="{{ competition.name }}">
+                        <div class="p-4">
+                            <div class="flex justify-between mb-2">
+                                <div class="h-2 w-4/5 rounded-full bg-gray-200">
+                                    <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-300"></div>
+                                </div>
+                                <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
+                            </div>
+                            <p class="py-2 text-gray-700 font-bold">Win this {{ competition.name }} and upgrade your tech game!</p>
+                        </div>
+                    </a>
+                    <div class="flex justify-between items-center px-4 pb-4 -mt-2 text-blue-500">
+                        <p class="text-xl">Ksh {{ competition.ticket_price }}</p>
+                        <svg class="size-10 fill-blue-500 text-white cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No electronics competitions available at the moment. Check back soon!</p>
+        {% endif %}
+    </div>
+</div><br>
+
+{% endblock %}

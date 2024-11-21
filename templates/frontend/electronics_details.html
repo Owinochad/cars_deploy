@@ -1,0 +1,316 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% static 'assets/css/style.css' %}
+{% block content %}
+
+<!-- =======================
+Pop up
+======================= -->
+<div id="pop-up" class="bg-black/50 transform transition-all opacity-100 scale-100 p-4 sm:p-8 md:p-20 min-h-screen z-10 fixed hidden inset-0 flex justify-center items-center">
+  <div class="bg-white w-11/12 sm:w-4/5 md:w-2/3 lg:w-2/5 p-4 sm:p-6 md:p-10 rounded-lg shadow-xl">
+    <form method="POST" action="{% url 'add_to_baskety' electronics_competition.id %}">
+      {% csrf_token %}
+      <div class="grid grid-cols-3 pb-4 font-bold text-gray-600 tracking-wide">
+        <p></p>
+        <h2 class="justify-self-center sm:text-lg md:text-xl">Buy tickets</h2>
+        <a href="#" id="x" class="justify-self-end text-sm sm:text-base md:text-lg">X</a>
+      </div>
+
+      <div class="flex items-center mb-4">
+        <img class="w-2/5 rounded aspect-video" src="{{ electronics_competition.image.url }}" alt="{{ electronics_competition.name }}">
+        <div class="ml-6">
+          <h2 class="text-sm sm:text-base md:text-lg font-bold"> A trip to {{ electronics_competition.name }}</h2>
+          <p class="text-sm sm:text-base md:text-lg">1 ticket = Ksh <span id="ticket-price">{{ electronics_competition.ticket_price }}</span></p>
+          <p class="text-sm sm:text-base md:text-lg font-bold"> Ksh <span id="total-price">{{ electronics_competition.ticket_price }}</span></p>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h2 class="text-sm sm:text-base md:text-lg text-gray-600 font-bold">Quantity</h2>
+        <div class="flex gap-4 items-center py-2">
+          <button type="button" class="bg-white-200 text-xs sm:text-sm md:text-base px-2 py-1 rounded" id="decrement">-</button>
+          <input class="w-12 sm:w-14 text-xs sm:text-sm md:text-base text-center" value="2" type="number" name="ticket_count" id="quantity" min="1">
+          <button type="button" class="bg-white-200 text-xs sm:text-sm md:text-base px-2 py-1 rounded" id="increment">+</button>
+        </div>
+      </div>
+
+      <div class="space-x-1 mt-2">
+        <h2 class="my-2 text-sm sm:text-base md:text-lg text-gray-600 font-bold">Quick Select</h2>
+        <div class="flex flex-wrap justify-start gap-2">
+          <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="10">10 tickets</a>
+          <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="20">20 tickets</a>
+          <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="30">30 tickets</a>
+          <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="40">40 tickets</a>
+          <a class="inline-block p-2 bg-gray-200 text-xs sm:text-sm md:text-base quick-select no-underline hover:no-underline" href="#" data-value="50">50 tickets</a>
+        </div>
+      </div>
+
+      <button class="block w-full py-3 px-8 mt-4 rounded-lg bg-orange-500 text-white text-xs sm:text-sm md:text-base font-bold animate-bounce">
+        Add to basket
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- 
+===================
+competition
+===================
+-->
+<div class="bg-gray-200 min-h-screen">
+  <div class="p-6 m-auto md:flex md:flex-col lg:flex-row gap-4">
+
+    <!-- Main Content with Carousel -->
+    <div class="border md:flex-1 lg:w 2/3">
+      <!-- Main image section with scroll buttons -->
+      <div class="relative">
+        <button id="mainScrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3 z-10">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        
+        <img class="w-full" src="{{ electronics_competition.image.url }}" alt="{{ electronics_competition.name }}" id="mainImage">
+    
+        <button id="mainScrollRight" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3 z-10">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    
+      <div class="relative w-full overflow-hidden">
+        <div class="flex transition-transform duration-300 ease-in-out" id="carousel">
+          {% for image in images %}
+          <div class="w-1/4 flex-shrink-0 p-2">
+            <img class="w-full h-30 object-cover border thumbnail" src="{{ image.image.url }}" alt="{{ competition.name }}">
+          </div>
+          {% endfor %}
+        </div>
+    
+        <button id="scrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+    
+        <button id="scrollRight" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400 p-3">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- This is the fixed sidebar for the competition details -->
+<div class="bg-white p-4 sticky top-20 transition delay-500 w-full sm:w-3/5 md:w-full lg:w-1/4 mx-auto md:ml-0  lg:mt-0"> <!-- Adjusted width -->
+  <h1 class="mb-2 text-sm text-gray-500 font-bold">Win a {{ electronics_competition.name }} and upgrade your electronic experience!</h1>
+  <p class="text-lg mb-2 text-gray-700">
+    At only <span class="font-bold text-orange-500">ksh {{ electronics_competition.ticket_price }}</span> cash
+  </p>
+  <p class="font-bold text-lg text-gray-800">More Tickets Higher chances of winning >>></p>
+
+  <div class="flex flex-col mt-4">
+    <img class="w-full h-auto mb-4 md:w-80" src="{{ electronics_competition.image.url }}" alt="{{ electronics_competition.name }}"> <!-- Adjusted image size -->
+
+    <h2 class="font-bold text-lg text-gray-800">Description</h2>
+    <div class="max-h-80 overflow-y-auto"> <!-- Scrollable specifications container -->
+      <ul class="pl-4 space-y-2 text-sm sm:text-base md:text-lg lg:text-sm text-gray-700">
+        {% for spec in specs_list %}
+        <li class="font-bold">{{ spec }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  
+  <a href="#" id="show-pop-up" class="block w-full px-8 py-3 bg-orange-500 rounded shadow text-white text-center mt-4 animate-bounce">ENTER NOW >></a>
+</div>
+  </div>
+
+  <div class="pt-4 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-500">
+    <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+      <h1 class="font-bold text-gray-800 text-center sm:text-left mb-2 mt-2">Similar Competitions</h1>
+
+      <form action="{% url 'search_competitions' %}" method="POST" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+          {% csrf_token %}
+          <div class="relative">
+              <input 
+                  type="search" 
+                  name="searched"                     
+                  placeholder="Search competitions..." 
+                  class="w-full px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 ease-in-out"
+              />
+              <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                  <svg 
+                      class="h-5 w-5 text-gray-400" 
+                      fill="currentColor" 
+                      viewBox="0 0 24 24"
+                  >
+                      <path d="M21.707 20.293l-5.32-5.32A7.92 7.92 0 0 0 18 10a8 8 0 1 0-8 8c1.658 0 3.195-.507 4.473-1.435l5.32 5.32a1 1 0 0 0 1.414-1.414zM10 16a6 6 0 1 1 6-6 6.006 6.006 0 0 1-6 6z"/>
+                  </svg>
+              </button>
+          </div>
+      </form>
+  </div>
+  
+
+    <!-- Grid layout for competitions -->
+    <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6 transition-all duration-500" id="carousel">
+        <!-- Example card for competitions -->
+        {% if electronics_competitions %}
+        {% for competition in electronics_competitions %}
+        
+                  <div class=" rounded-lg border overflow-hidden  mt-4 bg-white w-full sm:w-96 md:w-auto flex-shrink-0 transition-transform transform hover:scale-105 hover:shadow-md duration-200 ease-in-out" id="card">
+                    <!-- Wrap the competition details in the anchor tag -->
+                    <a href="{% url 'holicompetition' competition.id %}" class="block no-underline hover:no-underline">
+                        <img class="w-full" src="{{ competition.image.url }}" alt="{{ competition.name }}" class="rounded-t-lg">
+                        <div class="p-4">
+                          <div class="flex justify-between mb-2">
+                            <div class="h-2 w-4/5 rounded-full bg-gray-200">
+                                <div class="w-[{{ competition.tickets_sold_percentage|floatformat:0 }}%] h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                            </div>
+                            <p class="text-gray-800 text-xs">{{ competition.tickets_sold_percentage|floatformat:0 }}% sold</p>
+                            </div>
+                            <!-- <div class="flex justify-between mb-2">
+                                <div class="h-2 w-4/5 rounded-full bg-gray-200">
+                                    <div class="w-1/2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300"></div>
+                                </div>
+                                <p class="text-gray-800 text-xs">50% sold</p>
+                            </div> -->
+                            <p class="py-2 text-gray-700 font-bold">Win This {{ competition.name }} NOW </p>
+                            </div>
+                    </a>
+                    <!-- Adjust the flexbox and reduce unnecessary padding or margin -->
+                    <div class="flex justify-between items-center px-4 pb-4 -mt-2 text-orange-500">
+                        <p class="text-xl"> For Only Ksh {{ competition.ticket_price }}</p>
+                        <!-- Plus sign (separate from the link) -->
+                        <svg 
+                            id="{{ competition.id }}" 
+                            class="show-pop-up size-10 fill-orange-500 text-white cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            data-competition-id="{{ competition.id }}" data-car-brand="{{ competition.name }}" data-car-model="{{ competition.name }}" data-ticket-price="{{ competition.ticket_price }}" data-form-url="{% url 'add_to_basket' competition.id %}" data-image-url="{{ competition.image.url }}">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                </div>
+
+        {% endfor %}
+        {% endif %}
+
+</div>
+
+        <!-- Pagination controls -->
+        <!-- <div class="pagination flex justify-center mt-4">
+          {% if page_obj.has_previous %}
+              <a href="?page=1" class="px-3 py-1 mx-1 bg-gray-200 rounded">&laquo; first</a>
+              <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">previous</a>
+          {% endif %}
+
+          <span class="px-3 py-1 mx-1 bg-gray-300 rounded">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">next</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 mx-1 bg-gray-200 rounded">last &raquo;</a>
+          {% endif %}
+        </div>
+         -->
+    <!-- </div> -->
+
+</div> <br>
+
+<script>
+  const carousel = document.getElementById('carousel');
+  const scrollLeftButton = document.getElementById('scrollLeft');
+  const scrollRightButton = document.getElementById('scrollRight');
+  const mainScrollLeftButton = document.getElementById('mainScrollLeft');
+  const mainScrollRightButton = document.getElementById('mainScrollRight');
+  const mainImage = document.getElementById('mainImage');
+  const thumbnailImages = document.querySelectorAll('.thumbnail');
+  
+  let currentIndex = 0; // Current index for the main image and carousel
+  const totalImages = thumbnailImages.length;
+  const autoScrollInterval = 3000; // Interval for automatic scrolling (in milliseconds)
+  let autoScrollTimer;
+
+  // Function to update the main image based on the clicked thumbnail
+  function updateMainImage(index) {
+      mainImage.src = thumbnailImages[index].src; // Update the main image source
+  }
+
+  // Function to scroll the thumbnails
+  function scrollThumbnails(direction) {
+      if (direction === 'right') {
+          currentIndex = (currentIndex + 1) % totalImages; // Increment and loop
+      } else if (direction === 'left') {
+          currentIndex = (currentIndex - 1 + totalImages) % totalImages; // Decrement and loop
+      }
+      
+      // Move the carousel
+      const translateX = -currentIndex * (100 / 4); // Adjust based on the number of visible images
+      carousel.style.transform = `translateX(${translateX}%)`;
+
+      // Update the main image
+      updateMainImage(currentIndex);
+  }
+
+  // Function to automatically scroll
+  function startAutoScroll() {
+      autoScrollTimer = setInterval(() => {
+          scrollThumbnails('right');
+      }, autoScrollInterval);
+  }
+
+  // Function to stop auto-scrolling
+  function stopAutoScroll() {
+      clearInterval(autoScrollTimer);
+  }
+
+  // Event listener for scrolling right
+  scrollRightButton.addEventListener('click', () => {
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('right');
+  });
+
+  // Event listener for scrolling left
+  scrollLeftButton.addEventListener('click', () => {
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('left');
+  });
+
+  // Event listener for main image scrolling right
+  mainScrollRightButton.addEventListener('click', () => {
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('right');
+  });
+
+  // Event listener for main image scrolling left
+  mainScrollLeftButton.addEventListener('click', () => {
+      stopAutoScroll(); // Stop auto-scrolling when user interacts
+      scrollThumbnails('left');
+  });
+
+  // Event listener for thumbnail click
+  thumbnailImages.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', () => {
+          stopAutoScroll(); // Stop auto-scrolling when user interacts
+          currentIndex = index; // Set current index to clicked thumbnail index
+          updateMainImage(currentIndex); // Update the main image
+          
+          // Scroll the thumbnails to show the clicked image
+          const translateX = -currentIndex * (100 / 4); // Adjust based on the number of visible images
+          carousel.style.transform = `translateX(${translateX}%)`;
+      });
+  });
+
+  // Start auto-scrolling when the page loads
+  window.onload = startAutoScroll;
+
+  // Optional: Restart auto-scroll after user interaction
+  const controls = [scrollLeftButton, scrollRightButton, mainScrollLeftButton, mainScrollRightButton];
+  controls.forEach(control => {
+      control.addEventListener('mouseenter', stopAutoScroll);
+      control.addEventListener('mouseleave', startAutoScroll);
+  });
+</script>
+<script src="{% static 'assets\js\payPopUp.js' %}"></script>
+
+{% endblock %}

@@ -91,6 +91,11 @@ class CompetitionImage(models.Model):
     
 
 class HolidayCompetition(models.Model):
+
+    class CategoryChoices(models.TextChoices):
+        HOLIDAY = 'holiday', 'Holiday'
+        ELECTRONICS = 'electronics', 'Electronics'
+
     name = models.CharField(max_length=100, default='diani')
     description = models.TextField()
     image = models.ImageField(upload_to='cars/')
@@ -99,6 +104,13 @@ class HolidayCompetition(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     tickets_sold = models.IntegerField(default=0)
+
+    category = models.CharField(
+        max_length=20,
+        choices=CategoryChoices.choices,
+        default=CategoryChoices.HOLIDAY,
+        help_text="Select the competition category"
+    )
 
     index_display = models.BooleanField(default=False, help_text="Show on index page")
     priority = models.PositiveSmallIntegerField(
@@ -119,7 +131,7 @@ class HolidayCompetition(models.Model):
         super(HolidayCompetition, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.get_category_display()})"
         
     
     def tickets_sold_percentage(self):

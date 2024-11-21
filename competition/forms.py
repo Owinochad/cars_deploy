@@ -64,6 +64,7 @@ class HolidayCompetitionForm(forms.ModelForm):
             'end_date',
             'index_display',
             'priority',
+            'category',
         ]
 
     start_date = forms.DateTimeField(

@@ -411,10 +411,12 @@ def delete_images_holi(request, competition_id):
     
 def index(request):
     competitions = Competition.objects.filter(index_display=True).order_by('priority')[:4]
-    holicompetition = HolidayCompetition.objects.filter(index_display=True).order_by('priority')[:4]
+    holicompetition = HolidayCompetition.objects.filter(index_display=True, category = 'holiday').order_by('priority')[:4]
+    electronics = HolidayCompetition.objects.filter(index_display=True, category = 'electronics').order_by('priority')[:4]
     context = {
         'competitions': competitions,
         'holicompetition': holicompetition,
+        'electronics': electronics,
     }
     return render(request, 'frontend/index.html', context)
 
@@ -465,7 +467,8 @@ def competition_details(request, competition_id):
     return render(request, 'frontend/competition.html', context)
 
 def holidaycompetitions(request):
-    competitions = HolidayCompetition.objects.all().order_by('id')
+    # competitions = HolidayCompetition.objects.all().order_by('id')
+    competitions = HolidayCompetition.objects.filter(category='holiday')
 
     # paginator = Paginator(competitions, 12)  # 10 items per page
     # page_number = request.GET.get('page')
@@ -481,10 +484,10 @@ def holidaycompetitions(request):
 
 def holicompetition_details(request, holicompetition_id):
     # Fetch the specific holiday competition by ID
-    holiday_competition = get_object_or_404(HolidayCompetition, id=holicompetition_id)
+    holiday_competition = get_object_or_404(HolidayCompetition, id=holicompetition_id, category='holiday')
     
     # Fetch all holiday competitions (if needed for related competitions)
-    holiday_competitions = HolidayCompetition.objects.all().order_by('id')
+    holiday_competitions = HolidayCompetition.objects.filter(category='holiday').order_by('id')
 
     # paginator = Paginator(holiday_competitions, 12)  # 10 items per page
     # page_number = request.GET.get('page')
@@ -507,6 +510,37 @@ def holicompetition_details(request, holicompetition_id):
     
     return render(request, 'frontend/holidaycompedetails.html', context)
 
+def electronics_competition_details(request, electronics_competition_id):
+    # Fetch the specific electronics competition by ID
+    electronics_competition = get_object_or_404(HolidayCompetition, id=electronics_competition_id, category='electronics')
+    
+    # Fetch all electronics competitions (if needed for related competitions)
+    electronics_competitions = HolidayCompetition.objects.filter(category='electronics').order_by('id')
+
+    # Fetch associated images for the specific electronics competition
+    images = HoliCompetitionImage.objects.filter(competition=electronics_competition)
+
+    # Split the description into a list of specifications
+    specs_list = electronics_competition.description.splitlines()
+   
+    context = {
+        'electronics_competition': electronics_competition,
+        'images': images,
+        'electronics_competitions': electronics_competitions,
+        'specs_list': specs_list,
+    }
+    
+    return render(request, 'frontend/electronics_details.html', context)
+
+
+def electronics_competitions(request):
+    electronics = HolidayCompetition.objects.filter(category='electronics')
+
+    context = {
+        'competitions': electronics
+    }
+
+    return render(request, 'frontend/electronics.html', context)
 
 
 # Get the custom logger

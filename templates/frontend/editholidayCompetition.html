@@ -27,10 +27,9 @@
               <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
               <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
               <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
-              <li class="pt-6"><a href="{% url 'listCompetitions' %}">HolidayCompetitions List</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Holiday & Electronics Competitions List</a></li>
               <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
-              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
-              
+              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create Holiday & Electronics Competition</a></li>
               </ul>
             </div>       
           </div>
@@ -40,9 +39,9 @@
               <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
               <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
               <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
-              <li class="pt-6"><a href="{% url 'listHolidayCompetitions' %}">HolidayCompetitions List</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Holiday & Electronics Competitions List</a></li>
               <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
-              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
+              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create Holiday & Electronics Competition</a></li>
             </ul>
           </div>
   
@@ -62,10 +61,10 @@
             <ul class="mt-8 text-gray-500">
               <li class="pt-6 underline"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
               <li class="pt-6"><a href="{% url 'listUsers' %}">Users</a></li>
-              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions</a></li>
-              <li class="pt-6"><a href="{% url 'listHolidayCompetitions' %}">HolidayCompetitions List</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Competitions List</a></li>
+              <li class="pt-6"><a href="{% url 'listCompetitions' %}">Holiday & Electronics Competitions List</a></li>
               <li class="pt-6"><a href="{% url 'createCompetition' %}">Create Competition</a></li>
-              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create HolidayCompetition</a></li>
+              <li class="pt-6"><a href="{% url 'createholiCompetition' %}">Create Holiday & Electronics Competition</a></li>
             </ul>
           </div>
           <div class="flex flex-col items-center text-gray-500">
@@ -177,6 +176,11 @@
                         <label for="{{ form.priority.id_for_label }}">Priority:</label>
                     {{ form.priority }}
                     </div>
+
+                    <div class="md:w-1/2  gap-1 ">
+                        <label for="{{ form.index_diaplay.id_for_label }}">category:</label>
+                    {{ form.category }} 
+                        </div>
                     </div> <br>
 
                     <button class="w-full bg-green-500 p-2 rounded text-green-100 mt-4 hover:bg-green-400 transition">Confirm Edit</button>
